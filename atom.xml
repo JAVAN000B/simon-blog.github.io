@@ -3,11 +3,11 @@
   <title>At least, keep busy</title>
   
   
-  <link href="/atom.xml" rel="self"/>
+  <link href="/simon-blog.github.io/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
+  <link href="https://javan000b.github.io/simon-blog.github.io/"/>
   <updated>2020-08-05T15:03:19.718Z</updated>
-  <id>http://yoursite.com/</id>
+  <id>https://javan000b.github.io/simon-blog.github.io/</id>
   
   <author>
     <name>Simon Sun</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>Hello World</title>
-    <link href="http://yoursite.com/2020/08/05/hello-world/"/>
-    <id>http://yoursite.com/2020/08/05/hello-world/</id>
+    <link href="https://javan000b.github.io/simon-blog.github.io/2020/08/05/hello-world/"/>
+    <id>https://javan000b.github.io/simon-blog.github.io/2020/08/05/hello-world/</id>
     <published>2020-08-05T15:03:19.718Z</published>
     <updated>2020-08-05T15:03:19.718Z</updated>
     
@@ -30,10 +30,10 @@
     </summary>
     
     
-      <category term="others" scheme="http://yoursite.com/categories/others/"/>
+      <category term="others" scheme="https://javan000b.github.io/simon-blog.github.io/categories/others/"/>
     
     
-      <category term="others" scheme="http://yoursite.com/tags/others/"/>
+      <category term="others" scheme="https://javan000b.github.io/simon-blog.github.io/tags/others/"/>
     
   </entry>
   
