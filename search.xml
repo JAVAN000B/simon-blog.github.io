@@ -25,4 +25,17 @@
         <tag>others</tag>
       </tags>
   </entry>
+  <entry>
+    <title>python元类和装饰器</title>
+    <url>/simon-blog.github.io/2020/08/08/python%E5%85%83%E7%B1%BB%E5%92%8C%E8%A3%85%E9%A5%B0%E5%99%A8/</url>
+    <content><![CDATA[<h2 id="python装饰器"><a href="#python装饰器" class="headerlink" title="##python装饰器"></a>##python装饰器</h2><p>动态添加函数功能，相当于在原函数上套了一层皮，动态添加新的职责。比如Django，flask里的@session现在终于是弄明白那一块用户身份验证的原理了。（在原来的view函数上使用装饰者模式，如果http请求里包含了session的ID就允许render，从而实现一些页面对于用户的隐藏）<br>相关的身份验证代码：<br>‘’‘<br>from functools import wraps</p>
+<p>def requires_auth(f):<br>    @wraps(f)<br>    def decorated(<em>args, **kwargs):<br>        auth = request.authorization<br>        if not auth or not check_auth(auth.username, auth.password):<br>            authenticate()<br>        return f(*args, *</em>kwargs)<br>    return decorated<br>’‘’</p>
+]]></content>
+      <categories>
+        <category>整理总结</category>
+      </categories>
+      <tags>
+        <tag>-Python -知识整理</tag>
+      </tags>
+  </entry>
 </search>

@@ -6,7 +6,7 @@
   <link href="/simon-blog.github.io/atom.xml" rel="self"/>
   
   <link href="https://javan000b.github.io/simon-blog.github.io/"/>
-  <updated>2020-08-05T15:03:19.718Z</updated>
+  <updated>2020-08-08T12:38:02.918Z</updated>
   <id>https://javan000b.github.io/simon-blog.github.io/</id>
   
   <author>
@@ -15,6 +15,33 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>python元类和装饰器</title>
+    <link href="https://javan000b.github.io/simon-blog.github.io/2020/08/08/python%E5%85%83%E7%B1%BB%E5%92%8C%E8%A3%85%E9%A5%B0%E5%99%A8/"/>
+    <id>https://javan000b.github.io/simon-blog.github.io/2020/08/08/python%E5%85%83%E7%B1%BB%E5%92%8C%E8%A3%85%E9%A5%B0%E5%99%A8/</id>
+    <published>2020-08-08T12:18:07.000Z</published>
+    <updated>2020-08-08T12:38:02.918Z</updated>
+    
+    <summary type="html">
+    
+      
+      
+        
+        
+          &lt;h2 id=&quot;python装饰器&quot;&gt;&lt;a href=&quot;#python装饰器&quot; class=&quot;headerlink&quot;
+        
+      
+    
+    </summary>
+    
+    
+      <category term="整理总结" scheme="https://javan000b.github.io/simon-blog.github.io/categories/%E6%95%B4%E7%90%86%E6%80%BB%E7%BB%93/"/>
+    
+    
+      <category term="-Python -知识整理" scheme="https://javan000b.github.io/simon-blog.github.io/tags/Python-%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/"/>
+    
+  </entry>
   
   <entry>
     <title>Hello World</title>
