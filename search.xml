@@ -73,6 +73,8 @@
     <title>常见网络攻击</title>
     <url>/simon-blog.github.io/2020/08/08/%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前总结了网络的一些知识点，大概可以用网络的4层协议模型概括。虽然前博客的数据没了，但我会从新写一遍。今天就先来看一下之前没提到的网络安全这一块吧，也算是给自己查漏补缺了。</p>
+<a id="more"></a>
+
 <h3 id="SQL注入攻击"><a href="#SQL注入攻击" class="headerlink" title="SQL注入攻击"></a>SQL注入攻击</h3><hr>
 <p>这个相信大家肯定都有所耳闻，以前我天真的以为就是在url的后面加上<code>or 1=1</code>显然并不是这样。在HTTP请求中注入恶意的SQL代码，服务器使用参数构建数据库SQL命令时，恶意SQL被一起构造，并在数据库中执行。比如你输入用户名密码登录时，你将请求修改为：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">name</span> = ‘lianggzone’ <span class="keyword">and</span> <span class="keyword">password</span> = ‘’ <span class="keyword">or</span> ‘<span class="number">1</span>’=‘<span class="number">1</span>’</span><br></pre></td></tr></table></figure>
