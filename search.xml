@@ -69,4 +69,86 @@
         <tag>知识整理</tag>
       </tags>
   </entry>
+  <entry>
+    <title>常见网络攻击</title>
+    <url>/simon-blog.github.io/2020/08/08/%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>之前总结了网络的一些知识点，大概可以用网络的4层协议模型概括。虽然前博客的数据没了，但我会从新写一遍。今天就先来看一下之前没提到的网络安全这一块吧，也算是给自己查漏补缺了。</p>
+<h3 id="SQL注入攻击"><a href="#SQL注入攻击" class="headerlink" title="SQL注入攻击"></a>SQL注入攻击</h3><hr>
+<p>这个相信大家肯定都有所耳闻，以前我天真的以为就是在url的后面加上<code>or 1=1</code>显然并不是这样。在HTTP请求中注入恶意的SQL代码，服务器使用参数构建数据库SQL命令时，恶意SQL被一起构造，并在数据库中执行。比如你输入用户名密码登录时，你将请求修改为：</p>
+<figure class="highlight sql"><table><tr><td class="code"><pre><span class="line"><span class="keyword">select</span> * <span class="keyword">from</span> <span class="keyword">user</span> <span class="keyword">where</span> <span class="keyword">name</span> = ‘lianggzone’ <span class="keyword">and</span> <span class="keyword">password</span> = ‘’ <span class="keyword">or</span> ‘<span class="number">1</span>’=‘<span class="number">1</span>’</span><br></pre></td></tr></table></figure>
+
+<p>甚至，以前的校园网，不严谨的，设置密码时本身加上drop table这种，都属于SQL注入。所以他的原理很简单，让本应该只有一句SQL的语句，通过狗尾续貂的方式，再加上一句，使得SQL傻乎乎的去执行了第二句恶心代码。</p>
+<p>那么我们防御的目标也就很明确了</p>
+<ul>
+<li>客户端<ul>
+<li>有效性检验。</li>
+<li>限制字符串输入的长度。 </li>
+</ul>
+</li>
+<li>服务端<ul>
+<li>不用拼接SQL字符串。</li>
+<li>使用预编译的PrepareStatement。</li>
+<li>有效性检验。(为什么服务端还要做有效性检验？第一准则，外部都是不可信的，防止攻击者绕过Web端请求)</li>
+<li>过滤SQL需要的参数中的特殊字符。比如单引号、双引号。</li>
+</ul>
+</li>
+</ul>
+<h3 id="XSS攻击"><a href="#XSS攻击" class="headerlink" title="XSS攻击"></a>XSS攻击</h3><hr>
+<p>跨站点脚本攻击，指攻击者通过篡改网页，嵌入恶意脚本程序，在用户浏览网页时，控制用户浏览器进行恶意操作的一种攻击方式。既然我可以在SQL语句上搞猫腻，那我下次在使用评论功能时，在里面写脚本呢？没错，这就是xss攻击了。听起来很蠢，但如果不佳防范他可是能把你内裤是什么颜色都扒个清楚。之后会提到，他和scrf一起攻击，拿到你的cookie信息后有多危险。</p>
+<p>但是，他毕竟是显式的需要大摇大摆的写在http请求里的，要避免也并不复杂</p>
+<ul>
+<li><p>前端，服务端，同时需要字符串输入的长度限制。</p>
+</li>
+<li><p>前端，服务端，同时需要对HTML转义处理。将其中的”&lt;”,”&gt;”等特殊字符进行转义编码。</p>
+</li>
+<li><p>防 XSS 的核心是必须对输入的数据做过滤处理。</p>
+</li>
+</ul>
+<h3 id="CSRF攻击"><a href="#CSRF攻击" class="headerlink" title="CSRF攻击"></a>CSRF攻击</h3><hr>
+<p>重头戏，django自带避免csrf的中间件。跨站点请求伪造，指攻击者通过跨站请求，以合法的用户的身份进行非法操作。现在网站大抵都会提醒用户是否使用cookie就是因为害怕这个了。http在设计的时候本就是无状态的，既然是无状态那每次是否都需要做身份验证呢？如果把身份信息放置在一个地方，每次提交请求时直接从那里放进去，不就省了自己输入的麻烦？这也就是coockie的思想。</p>
+<p>设想一下，下面的情况：</p>
+<ol>
+<li><p>用户C打开浏览器，访问受信任网站A，输入用户名和密码请求登录网站A；</p>
+</li>
+<li><p>在用户信息通过验证后，网站A产生Cookie信息并返回给浏览器，此时用户登录网站A成功，可以正常发送请求到网站A；</p>
+</li>
+<li><p>用户未退出网站A之前，在同一浏览器中，打开一个TAB页访问网站B；</p>
+</li>
+<li><p>网站B接收到用户请求后，返回一些攻击性代码，并发出一个请求要求访问第三方站点A；</p>
+</li>
+<li><p>浏览器在接收到这些攻击性代码后，根据网站B的请求，在用户不知情的情况下携带Cookie信息，向网站A发出请求。网站A并不知道该请求其实是由B发起的，所以会根据用户C的Cookie信息以C的权限处理该请求，导致来自网站B的恶意代码被执行。 </p>
+</li>
+</ol>
+<p>上面的这个例子，有几个点需要注意一下。首先csrf攻击并没有拿到你的coockie数据，只是利用了你现在还在登录的这个状态。第二他发送的恶意请求如果不加上反制措施是完全正常的。第三，但是他的确是从B网站而不是A网站发出去的。</p>
+<p>针对上述特征，我们似乎可以对症下药了。</p>
+<ul>
+<li><p>尽量不要使用get去更新重要信息。get是在URL上明文传输的，而且对于穿过去的get请求的验证方式也没有post来的灵活。</p>
+</li>
+<li><p>送请求时，只有coockie里的信息是不够的。csrf最巧妙的地方就是他是一种愿者上钩的欺骗方式，一切的信息都是你coockie提供的，我只不过是提交了个请求而已。但是如果我们给提交请求额外设条件的话，csrf只能利用coockie，这样他伪造的请求就会因为条件不够而失败。比如：</p>
+</li>
+<li><p>在 HTTP 请求中以参数的形式加入一个随机产生的 token，并在服务器端建立一个拦截器来验证这个 token，如果请求中没有 token 或者 token 内容不正确，则认为可能是 CSRF 攻击而拒绝该请求。开始的时候我也是很奇怪，为什么加了一个token就行了。正常自己使用coockie时候也没看需要进行什么额外步骤啊。这是因为，除了cookie中的CSRF-Token外，请求体(POST)或者请求参数(GET)中也要有一个CSRF-Token，两者一样才是有效的。可是你csrf获取不到这个coockie里的token值啊，所以你伪造的请求里一定没有正确的token。（coockie里的token最好是httponly属性）</p>
+</li>
+<li><p>这个token不一定只可以放在请求里哦，还可以在HTTP头中定义属性验证。通过 XMLHttpRequest 这个类，可以一次性给所有该类请求加上 csrftoken 这个 HTTP 头属性，并把 token  值放入其中。这样解决了上种方法在请求中加入 token 的不便，同时，通过 XMLHttpRequest  请求的地址不会被记录到浏览器的地址栏，也不用担心 token 会透过 Referer 泄露到其他网站中去。</p>
+</li>
+<li><p>还有验证 HTTP Referer 字段的方法，http refer可以鉴别请求的来源地址，如果出自非本站，那很可能就是伪造的请求了。</p>
+</li>
+</ul>
+<h3 id="DDos-攻击"><a href="#DDos-攻击" class="headerlink" title="DDos 攻击"></a>DDos 攻击</h3><hr>
+<p>dos是一台电脑，ddos是多台电脑。因为我们知道http是应用层协议，建立在传输层tcp协议的基础上。那tcp连接要建立的话需要三次握手啊，如果你请求却又不进行第三次握手，相当于放服务器鸽子，服务器负载空增加，甚至严重就宕机了。</p>
+<p>说实话这个目前也没什么好办法，毕竟也是合理的游戏规则，要解决就多花钱吧。</p>
+<ul>
+<li>同时打开SYN半链接的数目</li>
+<li>SYN半链接的Time out 时间</li>
+<li>不必要的服务</li>
+</ul>
+<p>最后可能还有一些其他的，比如dns劫持，dns投毒，apr劫持啥的，这里就不细细讨论了啊，为啥呢？因为我想睡觉了。下次一定，下次一定。</p>
+]]></content>
+      <categories>
+        <category>整理总结</category>
+      </categories>
+      <tags>
+        <tag>知识整理</tag>
+        <tag>网络</tag>
+      </tags>
+  </entry>
 </search>
