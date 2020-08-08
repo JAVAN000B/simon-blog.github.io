@@ -6,7 +6,7 @@
   <link href="/simon-blog.github.io/atom.xml" rel="self"/>
   
   <link href="https://javan000b.github.io/simon-blog.github.io/"/>
-  <updated>2020-08-08T12:38:02.918Z</updated>
+  <updated>2020-08-08T13:33:27.005Z</updated>
   <id>https://javan000b.github.io/simon-blog.github.io/</id>
   
   <author>
@@ -21,17 +21,11 @@
     <link href="https://javan000b.github.io/simon-blog.github.io/2020/08/08/python%E5%85%83%E7%B1%BB%E5%92%8C%E8%A3%85%E9%A5%B0%E5%99%A8/"/>
     <id>https://javan000b.github.io/simon-blog.github.io/2020/08/08/python%E5%85%83%E7%B1%BB%E5%92%8C%E8%A3%85%E9%A5%B0%E5%99%A8/</id>
     <published>2020-08-08T12:18:07.000Z</published>
-    <updated>2020-08-08T12:38:02.918Z</updated>
+    <updated>2020-08-08T13:33:27.005Z</updated>
     
     <summary type="html">
     
-      
-      
-        
-        
-          &lt;h2 id=&quot;python装饰器&quot;&gt;&lt;a href=&quot;#python装饰器&quot; class=&quot;headerlink&quot;
-        
-      
+      &lt;h2 id=&quot;python装饰器&quot;&gt;&lt;a href=&quot;#python装饰器&quot; class=&quot;headerlink&quot; title=&quot;python装饰器&quot;&gt;&lt;/a&gt;python装饰器&lt;/h2&gt;&lt;p&gt;动态添加函数功能，相当于在原函数上套了一层皮，动态添加新的职责。比如Django，flask里的@session现在终于是弄明白那一块用户身份验证的原理了。（在原来的view函数上使用装饰者模式，如果http请求里包含了session的ID就允许render，从而实现一些页面对于用户的隐藏）&lt;/p&gt;
     
     </summary>
     
@@ -39,7 +33,9 @@
       <category term="整理总结" scheme="https://javan000b.github.io/simon-blog.github.io/categories/%E6%95%B4%E7%90%86%E6%80%BB%E7%BB%93/"/>
     
     
-      <category term="-Python -知识整理" scheme="https://javan000b.github.io/simon-blog.github.io/tags/Python-%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/"/>
+      <category term="Python" scheme="https://javan000b.github.io/simon-blog.github.io/tags/Python/"/>
+    
+      <category term="知识整理" scheme="https://javan000b.github.io/simon-blog.github.io/tags/%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/"/>
     
   </entry>
   
