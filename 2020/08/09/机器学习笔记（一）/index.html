@@ -28,7 +28,7 @@
 <meta property="og:description" content="频率统计和贝叶斯统计题外话，果然不管是西澳大学还是墨尔本大学的lecture都是一样的垃圾。始终不能理解为什么有人能听lecture听的津津有味。lecture和最后要做的毫无关系也算是澳洲大学的传统技艺了。">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2020-08-09T04:02:19.000Z">
-<meta property="article:modified_time" content="2020-08-09T12:53:52.638Z">
+<meta property="article:modified_time" content="2020-08-09T13:09:52.896Z">
 <meta property="article:author" content="Simon Sun">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="学校">
@@ -220,7 +220,7 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2020-08-09 12:02:19 / Modified: 20:53:52" itemprop="dateCreated datePublished" datetime="2020-08-09T12:02:19+08:00">2020-08-09</time>
+              <time title="Created: 2020-08-09 12:02:19 / Modified: 21:09:52" itemprop="dateCreated datePublished" datetime="2020-08-09T12:02:19+08:00">2020-08-09</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -245,7 +245,6 @@
       
         <h2 id="频率统计和贝叶斯统计"><a href="#频率统计和贝叶斯统计" class="headerlink" title="频率统计和贝叶斯统计"></a>频率统计和贝叶斯统计</h2><p>题外话，果然不管是西澳大学还是墨尔本大学的lecture都是一样的垃圾。始终不能理解为什么有人能听lecture听的津津有味。lecture和最后要做的毫无关系也算是澳洲大学的传统技艺了。</p>
 <a id="more"></a>
-
 <h3 id="两者的区别"><a href="#两者的区别" class="headerlink" title="两者的区别"></a>两者的区别</h3><hr>
 <p>在频率派估计的观点下，真实参数集<em>θ</em>是固定的但未知，我们使用作为数据集函数的随机变量<em>θ</em>作为点估计。频率派统计基于<em>θ</em>作所有的预测。</p>
 <p>贝叶斯使用概率来反映知识状态的确定程度。数据集是直接能够观测到因而不是随机的。贝叶斯派认为真实<em>θ</em>是未知的或不确定的，因此以一个随机变量来表示。</p>
@@ -270,65 +269,94 @@
 <p>先验分布的两种重要类型是<strong>无信息先验分布</strong>和<strong>共轭先验分布</strong>。</p>
 <h4 id="后验分布"><a href="#后验分布" class="headerlink" title="后验分布"></a><strong>后验分布</strong></h4><p>在获得样本X后，θ的后验分布（Posterior Distribution）就是在给定X=x的条件下θ的条件分布，记为π(θ|x)。求后验分布用的是贝叶斯公式。</p>
 <p><strong>1：连续型</strong></p>
-<p>θ为连续型随机变量时，其后验分布的密度函数为：<br>$$<br>\pi(\theta|x) = \frac{h(x,\theta)}{m(x)} = \frac{f(x|\theta)\pi(\theta)}{\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)}<br>$$<br>其中，h(x, θ) = f(x|θ)π(θ) 是X和θ的联合密度，f(x|θ) 是样本的概率密度函数。而m(x)：<br>$$<br>m(x) =\int_{\theta}h(x,\theta)d\theta =\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)<br>$$<br><strong>2：离散型</strong></p>
-<p>当θ是离散型随机变量时，先验分布可用先验分布列｛π(θi)，i=1,2,…,n｝来表示，这时的后验分布是如下离散形式：<br>$$<br>\pi(\theta_{i}|x) = \frac{f(x|\theta_i)\pi(\theta_i)}{\sum{f(x|\theta_i)\pi(\theta_i)}}<br>$$<br>那么后验分布可以看做是人们用总体信息和样本信息（统称为抽样信息）对先验分布作调整的结果，是总体信息、样本信息和先验信息的综合。</p>
+<p>θ为连续型随机变量时，其后验分布的密度函数为：</p>
+<script type="math/tex; mode=display">
+\pi(\theta|x) = \frac{h(x,\theta)}{m(x)} = \frac{f(x|\theta)\pi(\theta)}{\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)}</script><p>其中，h(x, θ) = f(x|θ)π(θ) 是X和θ的联合密度，f(x|θ) 是样本的概率密度函数。而m(x)：</p>
+<script type="math/tex; mode=display">
+m(x) =\int_{\theta}h(x,\theta)d\theta =\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)</script><p><strong>2：离散型</strong></p>
+<p>当θ是离散型随机变量时，先验分布可用先验分布列｛π(θi)，i=1,2,…,n｝来表示，这时的后验分布是如下离散形式：</p>
+<script type="math/tex; mode=display">
+\pi(\theta_{i}|x) = \frac{f(x|\theta_i)\pi(\theta_i)}{\sum{f(x|\theta_i)\pi(\theta_i)}}</script><p>那么后验分布可以看做是人们用总体信息和样本信息（统称为抽样信息）对先验分布作调整的结果，是总体信息、样本信息和先验信息的综合。</p>
 <h4 id="似然函数与共轭分布"><a href="#似然函数与共轭分布" class="headerlink" title="似然函数与共轭分布"></a><strong>似然函数与共轭分布</strong></h4><p><strong>1：似然函数</strong></p>
 <p>对于后验分布计算公式中的f(x|θ)，从不同的角度看有不同的含义：</p>
 <p>① 概率密度函数：若参数θ已知，而x是未知变量，那么描述的是不同样本点的概率，叫做概率密度函数。</p>
 <p>② 似然函数：若x是已经确定的，而参数θ是变量，那么描述的是对于不同的参数θ，某一个样本出现的概率，一般写作l(θ|x)，叫做参数θ的似然函数。</p>
 <p>从上面已知，后验分布 = 样本的密度函数×先验分布/边缘分布，也可以看做：后验分布 = 似然函数×先验分布/边缘分布。</p>
 <p><strong>2：共轭分布</strong></p>
-<p>已知后验分布 = 似然函数×先验分布/边缘分布，那么如果后验分布与先验分布有相同的形式，比如都服从贝塔分布，那么就称似然函数和先验分布是共轭的，互为共轭分布，先验分布是似然函数的共轭先验分布。<br>$$<br>\pi(\theta|x) = \frac{h(x,\theta)}{m(x)} = \frac{f(x|\theta)\pi(\theta)}{\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)}<br>$$<br>如果计算出来的π(θ|x)和π(θ)有相同的分布类型，那么称f(x|θ)和π(θ)互为共轭分布，π(θ)是f(x|θ)的共轭先验分布。</p>
-<p><strong>后验分布的简化计算</strong><br>$$<br>\pi(\theta|x) = \frac{h(x,\theta)}{m(x)}\propto f(x|\theta)\pi(\theta)<br>$$<br>符号∝表示“正比于”，即符号左边的式子和右边的式子只差了一个与参数θ无关的常数因子。<strong>π(θ|x) = 正则化因子 × {f(x|θ)的核} × {π(θ)的核}</strong></p>
+<p>已知后验分布 = 似然函数×先验分布/边缘分布，那么如果后验分布与先验分布有相同的形式，比如都服从贝塔分布，那么就称似然函数和先验分布是共轭的，互为共轭分布，先验分布是似然函数的共轭先验分布。</p>
+<script type="math/tex; mode=display">
+\pi(\theta|x) = \frac{h(x,\theta)}{m(x)} = \frac{f(x|\theta)\pi(\theta)}{\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)}</script><p>如果计算出来的π(θ|x)和π(θ)有相同的分布类型，那么称f(x|θ)和π(θ)互为共轭分布，π(θ)是f(x|θ)的共轭先验分布。</p>
+<p><strong>后验分布的简化计算</strong></p>
+<script type="math/tex; mode=display">
+\pi(\theta|x) = \frac{h(x,\theta)}{m(x)}\propto f(x|\theta)\pi(\theta)</script><p>符号∝表示“正比于”，即符号左边的式子和右边的式子只差了一个与参数θ无关的常数因子。<strong>π(θ|x) = 正则化因子 × {f(x|θ)的核} × {π(θ)的核}</strong></p>
 <p>(我看到这里一头雾水？？？我有干什么来着？)</p>
 <h3 id="最大似然估计和最大后验概率估计"><a href="#最大似然估计和最大后验概率估计" class="headerlink" title="最大似然估计和最大后验概率估计"></a>最大似然估计和最大后验概率估计</h3><hr>
 <p>统计要解决的问题是，手头有一堆数据，要利用这堆数据去推测模型和参数，而最大似然估计和最大后验概率估计就是推断模型和参数的两种不同方法。</p>
 <h4 id="最大似然估计"><a href="#最大似然估计" class="headerlink" title="最大似然估计"></a><strong>最大似然估计</strong></h4><p>最大似然估计是求参数θ, 使似然函数p(X|θ)最大。<strong>频率学派</strong>采用最大似然估计来推断模型的参数。</p>
 <p>最大似然估计的含义是根据已经采集到的样本，希望通过调整模型参数使得这些样本被选中的概率最大。</p>
 <p>样本的似然函数为p(X|θ)，可以理解为已知样本集合X的情况下，所有样本点同时出现的概率，是关于参数θ的函数，因此最大似然估计就是要最大化似然函数。</p>
-<p>最大似然估计的目标函数为：<br>$$<br>p(X|\theta) = \prod^{xn}<em>{x1}p(xi|\theta) = \sum^{xn}</em>{x1}logp(xi|\theta)<br>$$</p>
-<h4 id="最大后验概率估计"><a href="#最大后验概率估计" class="headerlink" title="最大后验概率估计"></a><strong>最大后验概率估计</strong></h4><p>最大后验概率估计则是想求参数θ，使p(x|θ)p(θ)，即后验概率最大。求得的θ不单让似然函数大，θ本身出现的先验概率也得大。贝叶斯学派采用最大后验概率估计来推断模型的参数。</p>
+<p>最大似然估计的目标函数为：</p>
+<script type="math/tex; mode=display">
+p(X|\theta) = \prod^{xn}_{x1}p(xi|\theta) = \sum^{xn}_{x1}logp(xi|\theta)</script><h4 id="最大后验概率估计"><a href="#最大后验概率估计" class="headerlink" title="最大后验概率估计"></a><strong>最大后验概率估计</strong></h4><p>最大后验概率估计则是想求参数θ，使p(x|θ)p(θ)，即后验概率最大。求得的θ不单让似然函数大，θ本身出现的先验概率也得大。贝叶斯学派采用最大后验概率估计来推断模型的参数。</p>
 <p>最大后验概率估计的含义是基于对参数的一个先验假设，并根据已经收集到的样本，通过调整参数使得这些样本被选中的后验概率最大。模型参数本身满足某种分布，不再一味依赖数据样例。</p>
-<p>如果以密度函数来进行计算，最大后验概率估计的目标函数就是：<br>$$<br>\pi(\theta|x) = \frac{h(x,\theta)}{m(x)} = \frac{f(x|\theta)\pi(\theta)}{\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)}<br>$$<br><strong>联系和区别</strong></p>
+<p>如果以密度函数来进行计算，最大后验概率估计的目标函数就是：</p>
+<script type="math/tex; mode=display">
+\pi(\theta|x) = \frac{h(x,\theta)}{m(x)} = \frac{f(x|\theta)\pi(\theta)}{\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)}</script><p><strong>联系和区别</strong></p>
 <p>最大似然估计比较依赖较大的数据量和大数定律，在样本量较少时，参数估计的结果容易出现较大偏差。</p>
 <p>最大后验概率估计允许我们把先验知识加入到估计模型中，这在样本很少的时候是很有用的。但是随着样本量的增大，参数估计的结果主要受数据量的影响，先验假设的影响会越来越小。</p>
 <p>如果参数θ服从于均匀分布U(0,1)时，有先验概率为p(θ)=1，此时最大似然估计和最大后验概率估计是等价的。</p>
 <p>看不明白也没啥大不了的，只是记录一下实际公式，应用可以看相关链接</p>
 <p>(相关链接：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1640085">贝叶斯学派与频率学派</a>,·<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/48071601">MLE&amp;MAP</a>)</p>
 <h2 id="决策理论-博弈论"><a href="#决策理论-博弈论" class="headerlink" title="决策理论(博弈论)"></a>决策理论(博弈论)</h2><p>决策论背后的核心思想是<strong>最小化期望损失</strong> 。定义清楚期望损失，问题就转变成最优化问题，带入优化器，就迎刃而解了。</p>
+<div class="table-container">
 <table>
 <thead>
 <tr>
 <th>#</th>
-<th align="right">实际值 0</th>
-<th align="right">实际值 1</th>
+<th style="text-align:right">实际值 0</th>
+<th style="text-align:right">实际值 1</th>
 </tr>
 </thead>
-<tbody><tr>
+<tbody>
+<tr>
 <td>预测值 0</td>
-<td align="right">00</td>
-<td align="right">01</td>
+<td style="text-align:right">00</td>
+<td style="text-align:right">01</td>
 </tr>
 <tr>
 <td>预测值 1</td>
-<td align="right">10</td>
-<td align="right">11</td>
+<td style="text-align:right">10</td>
+<td style="text-align:right">11</td>
 </tr>
-</tbody></table>
+</tbody>
+</table>
+</div>
 <p>(0 表示失败， 1表示成功; 01是最不能接受的结果，其次是10)</p>
-<p>0-1损失：<br>$$<br>L(y,\hat{y}) = I(y\not=\hat{y})= {0 \ \ \ if\ y = \hat{y}\choose 1\ \ \ \ else}<br>$$<br>平方损失：<br>$$<br>L(y,\hat y) = (y- \hat y)^2<br>$$</p>
-<h3 id="经验风险最小化"><a href="#经验风险最小化" class="headerlink" title="经验风险最小化"></a>经验风险最小化</h3><hr>
-<p>上面我们提到了两种损失函数，根据机器学习的目标，损失函数值越小，模型就越好。由于模型的输入输出(X,Y)是随机变量，遵循联合分布P(X,Y)，所以损失函数的期望是：<br>$$<br>R_{exp}(f) = E_p[L(Y,\hat y)]= \int L(y,\hat{y})P(y,\hat y) d\hat y dy<br>$$<br>这是理论上的期望风险模型，但是联合分布究竟以何种形式我们是未知的，所以我们使用训练数据的平均损失作为近似值，也就是经验风险：<br>$$<br>R_{emp}(f) = \frac{1}{N}\sum^N_{i=1}L(y_i,\hat y_i)<br>$$<br>那么标题的经验风险最小化就很容易理解了，即经验风险最小的模型是最优的模型。(R_emp min)</p>
+<p>0-1损失：</p>
+<script type="math/tex; mode=display">
+L(y,\hat{y}) = I(y\not=\hat{y})= {0 \ \ \ if\ y = \hat{y}\choose 1\ \ \ \ else}</script><p>平方损失：</p>
+<script type="math/tex; mode=display">
+L(y,\hat y) = (y- \hat y)^2</script><h3 id="经验风险最小化"><a href="#经验风险最小化" class="headerlink" title="经验风险最小化"></a>经验风险最小化</h3><hr>
+<p>上面我们提到了两种损失函数，根据机器学习的目标，损失函数值越小，模型就越好。由于模型的输入输出(X,Y)是随机变量，遵循联合分布P(X,Y)，所以损失函数的期望是：</p>
+<script type="math/tex; mode=display">
+R_{exp}(f) = E_p[L(Y,\hat y)]= \int L(y,\hat{y})P(y,\hat y) d\hat y dy</script><p>这是理论上的期望风险模型，但是联合分布究竟以何种形式我们是未知的，所以我们使用训练数据的平均损失作为近似值，也就是经验风险：</p>
+<script type="math/tex; mode=display">
+R_{emp}(f) = \frac{1}{N}\sum^N_{i=1}L(y_i,\hat y_i)</script><p>那么标题的经验风险最小化就很容易理解了，即经验风险最小的模型是最优的模型。(R_emp min)</p>
 <p>当样本容量足够大时，经验风险最小化能保证有很好的学习效果。比如，<strong>极大似然估计</strong>（就是经验风险最小化的一个例子，<strong>当模型是条件概率分布，损失函数是对数损失函数时，经验风险最小化就等价于极大似然估计。</strong>(是古典学派的胜利啊)</p>
 <h3 id="结构风险最小化"><a href="#结构风险最小化" class="headerlink" title="结构风险最小化"></a>结构风险最小化</h3><hr>
-<p>结构风险最小化（structural minimization,  SRM）是为了防止过拟合提出的策略。结构风险最小化等价于正则化（regularization）。结构风险在经验风险上加上表示模型复杂度的正则化项（regularizer）或罚项（penalty term）。<br>$$<br>R_{srm}(f) = R_{emp}+\lambda J(f)<br>$$<br>J(f)是模型复杂度函数，入大于0是系数。</p>
+<p>结构风险最小化（structural minimization,  SRM）是为了防止过拟合提出的策略。结构风险最小化等价于正则化（regularization）。结构风险在经验风险上加上表示模型复杂度的正则化项（regularizer）或罚项（penalty term）。</p>
+<script type="math/tex; mode=display">
+R_{srm}(f) = R_{emp}+\lambda J(f)</script><p>J(f)是模型复杂度函数，入大于0是系数。</p>
 <p>结构风险小需要经验风险和模型复杂度同时都小，结构风险小的模型往往对训练数据以及未知的测试数据都有较好的预测。</p>
 <p>贝叶斯估计中的最大后验概率估计（maximum posterior probability  estimation,MAP）就是结构风险最小化的一个例子，当模型是条件概率分布、损失函数是对数损失函数、模型复杂度由模型的先验概率表示时，结构风险最小化就等价于最大后验概率估计。</p>
 <p>相关链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/pxhdky/article/details/83544932">经验风险最小化与结构风险最小化</a></p>
 <h3 id="贝叶斯决策"><a href="#贝叶斯决策" class="headerlink" title="贝叶斯决策"></a>贝叶斯决策</h3><hr>
-<p>可以看到我们在上面计算损失时，都是只用了训练数据本身，那很自然的想到，这种没有使用先验概率的想法是频率统计的风格。那贝叶斯决策，也就是在次基础上加上先验概率了。<br>$$<br>\lambda^{(i)}_j = \lambda(\omega_i|\omega_j)\ \ \ (i,j=1,2,…,c)<br>$$<br>表示将j类误判为i类的损失，c为类数。由λ构成一个c×c的损失矩阵，也即表示决策表。</p>
-<p>最小风险贝叶斯决策的判决函数为：<br>$$<br>minR_i(x) = \sum^c_{j=1}\lambda_j^{(i)}P(w_j|x)<br>$$</p>
-<h4 id="贝叶斯决策的一般过程"><a href="#贝叶斯决策的一般过程" class="headerlink" title="贝叶斯决策的一般过程"></a>贝叶斯决策的一般过程</h4><p>1）估计先验概率：①根据实际情况做经验估计；②根据样本分布的频率估计概率。</p>
+<p>可以看到我们在上面计算损失时，都是只用了训练数据本身，那很自然的想到，这种没有使用先验概率的想法是频率统计的风格。那贝叶斯决策，也就是在次基础上加上先验概率了。</p>
+<script type="math/tex; mode=display">
+\lambda^{(i)}_j = \lambda(\omega_i|\omega_j)\ \ \ (i,j=1,2,...,c)</script><p>表示将j类误判为i类的损失，c为类数。由λ构成一个c×c的损失矩阵，也即表示决策表。</p>
+<p>最小风险贝叶斯决策的判决函数为：</p>
+<script type="math/tex; mode=display">
+minR_i(x) = \sum^c_{j=1}\lambda_j^{(i)}P(w_j|x)</script><h4 id="贝叶斯决策的一般过程"><a href="#贝叶斯决策的一般过程" class="headerlink" title="贝叶斯决策的一般过程"></a>贝叶斯决策的一般过程</h4><p>1）估计先验概率：①根据实际情况做经验估计；②根据样本分布的频率估计概率。</p>
 <p>（2）计算类条件概率密度：①参数估计：类条件概率分布类型已知，参数未知，通过训练样本来估计（最大似然法、Bayes估计）；②非参数估计：不判断类条件概率分布类型，直接根据训练样本来估计（Parzen窗、kn-近邻法）。</p>
 <p>（3）计算后验概率。</p>
 <p>（4-1）若进行最小错误率决策，根据后验概率即可作出决策。</p>
