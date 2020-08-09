@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/simon-blog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/simon-blog.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/simon-blog.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/simon-blog.github.io/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/simon-blog.github.io/css/main.css">
+
+
+<link rel="stylesheet" href="/simon-blog.github.io/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javan000b.github.io","root":"/simon-blog.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="频率统计和贝叶斯统计题外话，果然不管是西澳大学还是墨尔本大学的lecture都是一样的垃圾。始终不能理解为什么有人能听lecture听的津津有味。lecture和最后要做的毫无关系也算是澳洲大学的传统技艺了。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（一）">
+<meta property="og:url" content="https://javan000b.github.io/simon-blog.github.io/2020/08/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="At least, keep busy">
+<meta property="og:description" content="频率统计和贝叶斯统计题外话，果然不管是西澳大学还是墨尔本大学的lecture都是一样的垃圾。始终不能理解为什么有人能听lecture听的津津有味。lecture和最后要做的毫无关系也算是澳洲大学的传统技艺了。">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2020-08-09T04:02:19.000Z">
+<meta property="article:modified_time" content="2020-08-09T12:53:52.638Z">
+<meta property="article:author" content="Simon Sun">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="学校">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://javan000b.github.io/simon-blog.github.io/2020/08/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>机器学习笔记（一） | At least, keep busy</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/simon-blog.github.io/atom.xml" title="At least, keep busy" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/simon-blog.github.io/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">At least, keep busy</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/simon-blog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/simon-blog.github.io/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/simon-blog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/simon-blog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/simon-blog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://javan000b.github.io/simon-blog.github.io/2020/08/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/simon-blog.github.io/images/avatar.jpg">
+      <meta itemprop="name" content="Simon Sun">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="At least, keep busy">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习笔记（一）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-08-09 12:02:19 / Modified: 20:53:52" itemprop="dateCreated datePublished" datetime="2020-08-09T12:02:19+08:00">2020-08-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/simon-blog.github.io/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="频率统计和贝叶斯统计"><a href="#频率统计和贝叶斯统计" class="headerlink" title="频率统计和贝叶斯统计"></a>频率统计和贝叶斯统计</h2><p>题外话，果然不管是西澳大学还是墨尔本大学的lecture都是一样的垃圾。始终不能理解为什么有人能听lecture听的津津有味。lecture和最后要做的毫无关系也算是澳洲大学的传统技艺了。</p>
+<a id="more"></a>
+
+<h3 id="两者的区别"><a href="#两者的区别" class="headerlink" title="两者的区别"></a>两者的区别</h3><hr>
+<p>在频率派估计的观点下，真实参数集<em>θ</em>是固定的但未知，我们使用作为数据集函数的随机变量<em>θ</em>作为点估计。频率派统计基于<em>θ</em>作所有的预测。</p>
+<p>贝叶斯使用概率来反映知识状态的确定程度。数据集是直接能够观测到因而不是随机的。贝叶斯派认为真实<em>θ</em>是未知的或不确定的，因此以一个随机变量来表示。</p>
+<h4 id="总体信息、样本信息和先验信息。"><a href="#总体信息、样本信息和先验信息。" class="headerlink" title="总体信息、样本信息和先验信息。"></a>总体信息、样本信息和先验信息。</h4><p>听起来一脸懵逼，首先理解三个概念：</p>
+<p>数理统计学的任务是通过样本推断总体。把样本视为随机变量时，它有概率分布，称为总体分布。如果我们已经知道了总体的概率分布，那我们得到的这种信息就叫做总体信息。（比如投一次硬币是0-1分布）</p>
+<p>另一种信息是样本信息，就是从总体中抽取的样本所提供的信息。我们希望通过观察样本的分布，从而对总体的分布或对总体的某些数字特征作出统计推断。（你实际投了几次，实际情况得出的概率）</p>
+<p>第三种信息是先验信息（Prior Information），就是在抽样之前，根据经验和历史资料，得到的有关统计推断问题中未知参数的信息。（你投之前就知道硬币就两个面）</p>
+<p>基于总体信息和样本信息进行统计推断的理论和方法，称为经典（古典）统计学，它的基本观点是：把样本看成是来自于有一定概率分布的总体，所研究的对象是这个总体而不局限于数据本身。（遇到问题不要怕，我先套个公式先，一定存在一个公式，能完美解释这个情况）</p>
+<p>而基于总体信息、样本信息和先验信息进行统计推断的方法和理论，则称为贝叶斯统计学，它与经典统计学的主要区别在于是否利用先验信息。（老兄啊，这硬币反面有磨损的，怎么投都不会是概率0.5的）</p>
+<p>在使用样本上也存在差别，贝叶斯统计学重视已出现的样本，对尚未出现的样本不予考虑。所以贝叶斯学派非常重视先验信息的收集、挖掘和加工，使之形成先验分布而参与到统计推断中，以提升统计推断的效果。（就是先入为主，解释了当前现象就行）</p>
+<h4 id="主观立场"><a href="#主观立场" class="headerlink" title="主观立场"></a>主观立场</h4><p>主观概率以及先验分布的确定。贝叶斯学派提出了主观概率，把主观概率理解为主体对事件发生的概率的相信程度，即不同的人对同一事件的概率可以得到不同的结果。（他测得是这个模型到底有多可靠）</p>
+<p>而频率学派认为一个事件的概率要由大量重复试验下的频率来解释，不应该因人而异，必须具有客观性，而先验分布是主观随意的产物，不可以接受。（通过大量规律，寻找客观存在只是还没被发现的规律）</p>
+<p>涉及“频率解释”本身。许多事件是一次性的，在严格或大致相同条件下让这一个事件重复出现是不可能的。（分手了就给我爬开，这辈子都不会有下次一定了）</p>
+<p>事前规定精度和可靠度不合理。频率学派基于概率的频率解释，其方法（点估计、区间估计和假设检验）的精度和可靠度，是在事前（抽样前）就定下的，称为“事前精度”和“事前可靠度”。而贝叶斯学派认为统计推断的精度和可靠度，应该与实际的样本值有关，应当采用“事后精度”和“事后可靠度”。</p>
+<p>说白了，贝叶斯就比较粗暴，他基于一些事先的评判来做出概率的模型，然后检测这个模型的可靠程度。而old school的频率论就死守着概率推导的严谨性，就好象在和你说茴字有四种写法，在真的确定一个分布前，他做的一切都是0,甚至有的事情情况过于复杂，传统的推导是很难找到其中规律的。贝叶斯选择了像现实妥协。（我个人更喜欢贝叶斯的想法，在我看来频率论就像是连merge sort都写不出来的人在指责你A星算法选的启发式不够好一样）</p>
+<h4 id="从对未知参数的认识上来理解"><a href="#从对未知参数的认识上来理解" class="headerlink" title="从对未知参数的认识上来理解"></a>从对未知参数的认识上来理解</h4><p>频率学派把未知参数θ看成一个未知的固定量，仅把样本看做随机变量，而贝叶斯学派把未知参数也看做是随机变量。终于绕回来了，现在在看这句话是不是又有了新的想法。</p>
+<h3 id="先验分布、后验分布和共轭分布"><a href="#先验分布、后验分布和共轭分布" class="headerlink" title="先验分布、后验分布和共轭分布"></a>先验分布、后验分布和共轭分布</h3><hr>
+<p>贝叶斯统计学与经典统计学的不同之处在于，贝叶斯统计学在统计推断时除了利用抽样信息外，还利用参数的先验信息。先验分布的确定有很大的主观性和随意性，当先验分布完全未知或部分未知时，如果人为给定的先验分布与实际情形偏离较大，那么贝叶斯解的性质就比较差。</p>
+<h4 id="先验分布"><a href="#先验分布" class="headerlink" title="先验分布"></a><strong>先验分布</strong></h4><p>参数空间Θ上的任一概率分布都称为先验分布（Prior Distribution）。</p>
+<p>用π(θ)来表示随机变量θ的概率函数（当θ为连续型随机变量时，π(θ)表示θ的密度函数；当θ为离散型随机变量时，π(θi)表示概率p(θ=θi)，i=1,2,…,n）。</p>
+<p>先验分布π(θ)是在抽样样本X之前对参数θ可能取值的认识，在获取样本之后，由于样本X中也包含了θ的信息，故人们对θ的认识发生了变化，于是对θ的取值进行调整，就得到了参数θ的后验分布π(θ|x)。</p>
+<p>先验分布的两种重要类型是<strong>无信息先验分布</strong>和<strong>共轭先验分布</strong>。</p>
+<h4 id="后验分布"><a href="#后验分布" class="headerlink" title="后验分布"></a><strong>后验分布</strong></h4><p>在获得样本X后，θ的后验分布（Posterior Distribution）就是在给定X=x的条件下θ的条件分布，记为π(θ|x)。求后验分布用的是贝叶斯公式。</p>
+<p><strong>1：连续型</strong></p>
+<p>θ为连续型随机变量时，其后验分布的密度函数为：<br>$$<br>\pi(\theta|x) = \frac{h(x,\theta)}{m(x)} = \frac{f(x|\theta)\pi(\theta)}{\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)}<br>$$<br>其中，h(x, θ) = f(x|θ)π(θ) 是X和θ的联合密度，f(x|θ) 是样本的概率密度函数。而m(x)：<br>$$<br>m(x) =\int_{\theta}h(x,\theta)d\theta =\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)<br>$$<br><strong>2：离散型</strong></p>
+<p>当θ是离散型随机变量时，先验分布可用先验分布列｛π(θi)，i=1,2,…,n｝来表示，这时的后验分布是如下离散形式：<br>$$<br>\pi(\theta_{i}|x) = \frac{f(x|\theta_i)\pi(\theta_i)}{\sum{f(x|\theta_i)\pi(\theta_i)}}<br>$$<br>那么后验分布可以看做是人们用总体信息和样本信息（统称为抽样信息）对先验分布作调整的结果，是总体信息、样本信息和先验信息的综合。</p>
+<h4 id="似然函数与共轭分布"><a href="#似然函数与共轭分布" class="headerlink" title="似然函数与共轭分布"></a><strong>似然函数与共轭分布</strong></h4><p><strong>1：似然函数</strong></p>
+<p>对于后验分布计算公式中的f(x|θ)，从不同的角度看有不同的含义：</p>
+<p>① 概率密度函数：若参数θ已知，而x是未知变量，那么描述的是不同样本点的概率，叫做概率密度函数。</p>
+<p>② 似然函数：若x是已经确定的，而参数θ是变量，那么描述的是对于不同的参数θ，某一个样本出现的概率，一般写作l(θ|x)，叫做参数θ的似然函数。</p>
+<p>从上面已知，后验分布 = 样本的密度函数×先验分布/边缘分布，也可以看做：后验分布 = 似然函数×先验分布/边缘分布。</p>
+<p><strong>2：共轭分布</strong></p>
+<p>已知后验分布 = 似然函数×先验分布/边缘分布，那么如果后验分布与先验分布有相同的形式，比如都服从贝塔分布，那么就称似然函数和先验分布是共轭的，互为共轭分布，先验分布是似然函数的共轭先验分布。<br>$$<br>\pi(\theta|x) = \frac{h(x,\theta)}{m(x)} = \frac{f(x|\theta)\pi(\theta)}{\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)}<br>$$<br>如果计算出来的π(θ|x)和π(θ)有相同的分布类型，那么称f(x|θ)和π(θ)互为共轭分布，π(θ)是f(x|θ)的共轭先验分布。</p>
+<p><strong>后验分布的简化计算</strong><br>$$<br>\pi(\theta|x) = \frac{h(x,\theta)}{m(x)}\propto f(x|\theta)\pi(\theta)<br>$$<br>符号∝表示“正比于”，即符号左边的式子和右边的式子只差了一个与参数θ无关的常数因子。<strong>π(θ|x) = 正则化因子 × {f(x|θ)的核} × {π(θ)的核}</strong></p>
+<p>(我看到这里一头雾水？？？我有干什么来着？)</p>
+<h3 id="最大似然估计和最大后验概率估计"><a href="#最大似然估计和最大后验概率估计" class="headerlink" title="最大似然估计和最大后验概率估计"></a>最大似然估计和最大后验概率估计</h3><hr>
+<p>统计要解决的问题是，手头有一堆数据，要利用这堆数据去推测模型和参数，而最大似然估计和最大后验概率估计就是推断模型和参数的两种不同方法。</p>
+<h4 id="最大似然估计"><a href="#最大似然估计" class="headerlink" title="最大似然估计"></a><strong>最大似然估计</strong></h4><p>最大似然估计是求参数θ, 使似然函数p(X|θ)最大。<strong>频率学派</strong>采用最大似然估计来推断模型的参数。</p>
+<p>最大似然估计的含义是根据已经采集到的样本，希望通过调整模型参数使得这些样本被选中的概率最大。</p>
+<p>样本的似然函数为p(X|θ)，可以理解为已知样本集合X的情况下，所有样本点同时出现的概率，是关于参数θ的函数，因此最大似然估计就是要最大化似然函数。</p>
+<p>最大似然估计的目标函数为：<br>$$<br>p(X|\theta) = \prod^{xn}<em>{x1}p(xi|\theta) = \sum^{xn}</em>{x1}logp(xi|\theta)<br>$$</p>
+<h4 id="最大后验概率估计"><a href="#最大后验概率估计" class="headerlink" title="最大后验概率估计"></a><strong>最大后验概率估计</strong></h4><p>最大后验概率估计则是想求参数θ，使p(x|θ)p(θ)，即后验概率最大。求得的θ不单让似然函数大，θ本身出现的先验概率也得大。贝叶斯学派采用最大后验概率估计来推断模型的参数。</p>
+<p>最大后验概率估计的含义是基于对参数的一个先验假设，并根据已经收集到的样本，通过调整参数使得这些样本被选中的后验概率最大。模型参数本身满足某种分布，不再一味依赖数据样例。</p>
+<p>如果以密度函数来进行计算，最大后验概率估计的目标函数就是：<br>$$<br>\pi(\theta|x) = \frac{h(x,\theta)}{m(x)} = \frac{f(x|\theta)\pi(\theta)}{\int_{\theta}f(x|\theta)\pi(\theta)d(\theta)}<br>$$<br><strong>联系和区别</strong></p>
+<p>最大似然估计比较依赖较大的数据量和大数定律，在样本量较少时，参数估计的结果容易出现较大偏差。</p>
+<p>最大后验概率估计允许我们把先验知识加入到估计模型中，这在样本很少的时候是很有用的。但是随着样本量的增大，参数估计的结果主要受数据量的影响，先验假设的影响会越来越小。</p>
+<p>如果参数θ服从于均匀分布U(0,1)时，有先验概率为p(θ)=1，此时最大似然估计和最大后验概率估计是等价的。</p>
+<p>看不明白也没啥大不了的，只是记录一下实际公式，应用可以看相关链接</p>
+<p>(相关链接：<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1640085">贝叶斯学派与频率学派</a>,·<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/48071601">MLE&amp;MAP</a>)</p>
+<h2 id="决策理论-博弈论"><a href="#决策理论-博弈论" class="headerlink" title="决策理论(博弈论)"></a>决策理论(博弈论)</h2><p>决策论背后的核心思想是<strong>最小化期望损失</strong> 。定义清楚期望损失，问题就转变成最优化问题，带入优化器，就迎刃而解了。</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th align="right">实际值 0</th>
+<th align="right">实际值 1</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>预测值 0</td>
+<td align="right">00</td>
+<td align="right">01</td>
+</tr>
+<tr>
+<td>预测值 1</td>
+<td align="right">10</td>
+<td align="right">11</td>
+</tr>
+</tbody></table>
+<p>(0 表示失败， 1表示成功; 01是最不能接受的结果，其次是10)</p>
+<p>0-1损失：<br>$$<br>L(y,\hat{y}) = I(y\not=\hat{y})= {0 \ \ \ if\ y = \hat{y}\choose 1\ \ \ \ else}<br>$$<br>平方损失：<br>$$<br>L(y,\hat y) = (y- \hat y)^2<br>$$</p>
+<h3 id="经验风险最小化"><a href="#经验风险最小化" class="headerlink" title="经验风险最小化"></a>经验风险最小化</h3><hr>
+<p>上面我们提到了两种损失函数，根据机器学习的目标，损失函数值越小，模型就越好。由于模型的输入输出(X,Y)是随机变量，遵循联合分布P(X,Y)，所以损失函数的期望是：<br>$$<br>R_{exp}(f) = E_p[L(Y,\hat y)]= \int L(y,\hat{y})P(y,\hat y) d\hat y dy<br>$$<br>这是理论上的期望风险模型，但是联合分布究竟以何种形式我们是未知的，所以我们使用训练数据的平均损失作为近似值，也就是经验风险：<br>$$<br>R_{emp}(f) = \frac{1}{N}\sum^N_{i=1}L(y_i,\hat y_i)<br>$$<br>那么标题的经验风险最小化就很容易理解了，即经验风险最小的模型是最优的模型。(R_emp min)</p>
+<p>当样本容量足够大时，经验风险最小化能保证有很好的学习效果。比如，<strong>极大似然估计</strong>（就是经验风险最小化的一个例子，<strong>当模型是条件概率分布，损失函数是对数损失函数时，经验风险最小化就等价于极大似然估计。</strong>(是古典学派的胜利啊)</p>
+<h3 id="结构风险最小化"><a href="#结构风险最小化" class="headerlink" title="结构风险最小化"></a>结构风险最小化</h3><hr>
+<p>结构风险最小化（structural minimization,  SRM）是为了防止过拟合提出的策略。结构风险最小化等价于正则化（regularization）。结构风险在经验风险上加上表示模型复杂度的正则化项（regularizer）或罚项（penalty term）。<br>$$<br>R_{srm}(f) = R_{emp}+\lambda J(f)<br>$$<br>J(f)是模型复杂度函数，入大于0是系数。</p>
+<p>结构风险小需要经验风险和模型复杂度同时都小，结构风险小的模型往往对训练数据以及未知的测试数据都有较好的预测。</p>
+<p>贝叶斯估计中的最大后验概率估计（maximum posterior probability  estimation,MAP）就是结构风险最小化的一个例子，当模型是条件概率分布、损失函数是对数损失函数、模型复杂度由模型的先验概率表示时，结构风险最小化就等价于最大后验概率估计。</p>
+<p>相关链接：<a target="_blank" rel="noopener" href="https://blog.csdn.net/pxhdky/article/details/83544932">经验风险最小化与结构风险最小化</a></p>
+<h3 id="贝叶斯决策"><a href="#贝叶斯决策" class="headerlink" title="贝叶斯决策"></a>贝叶斯决策</h3><hr>
+<p>可以看到我们在上面计算损失时，都是只用了训练数据本身，那很自然的想到，这种没有使用先验概率的想法是频率统计的风格。那贝叶斯决策，也就是在次基础上加上先验概率了。<br>$$<br>\lambda^{(i)}_j = \lambda(\omega_i|\omega_j)\ \ \ (i,j=1,2,…,c)<br>$$<br>表示将j类误判为i类的损失，c为类数。由λ构成一个c×c的损失矩阵，也即表示决策表。</p>
+<p>最小风险贝叶斯决策的判决函数为：<br>$$<br>minR_i(x) = \sum^c_{j=1}\lambda_j^{(i)}P(w_j|x)<br>$$</p>
+<h4 id="贝叶斯决策的一般过程"><a href="#贝叶斯决策的一般过程" class="headerlink" title="贝叶斯决策的一般过程"></a>贝叶斯决策的一般过程</h4><p>1）估计先验概率：①根据实际情况做经验估计；②根据样本分布的频率估计概率。</p>
+<p>（2）计算类条件概率密度：①参数估计：类条件概率分布类型已知，参数未知，通过训练样本来估计（最大似然法、Bayes估计）；②非参数估计：不判断类条件概率分布类型，直接根据训练样本来估计（Parzen窗、kn-近邻法）。</p>
+<p>（3）计算后验概率。</p>
+<p>（4-1）若进行最小错误率决策，根据后验概率即可作出决策。</p>
+<p>（4-2）若进行最小风险决策，使用上面公式</p>
+<p>相关链接：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/hizhaolei/p/8196096.html">贝叶斯决策</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/simon-blog.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/simon-blog.github.io/tags/%E5%AD%A6%E6%A0%A1/" rel="tag"># 学校</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/simon-blog.github.io/2020/08/08/%E5%B8%B8%E8%A7%81%E7%BD%91%E7%BB%9C%E6%94%BB%E5%87%BB/" rel="prev" title="常见网络攻击">
+      <i class="fa fa-chevron-left"></i> 常见网络攻击
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A2%91%E7%8E%87%E7%BB%9F%E8%AE%A1%E5%92%8C%E8%B4%9D%E5%8F%B6%E6%96%AF%E7%BB%9F%E8%AE%A1"><span class="nav-number">1.</span> <span class="nav-text">频率统计和贝叶斯统计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%A4%E8%80%85%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="nav-number">1.1.</span> <span class="nav-text">两者的区别</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%80%BB%E4%BD%93%E4%BF%A1%E6%81%AF%E3%80%81%E6%A0%B7%E6%9C%AC%E4%BF%A1%E6%81%AF%E5%92%8C%E5%85%88%E9%AA%8C%E4%BF%A1%E6%81%AF%E3%80%82"><span class="nav-number">1.1.1.</span> <span class="nav-text">总体信息、样本信息和先验信息。</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%B8%BB%E8%A7%82%E7%AB%8B%E5%9C%BA"><span class="nav-number">1.1.2.</span> <span class="nav-text">主观立场</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%8E%E5%AF%B9%E6%9C%AA%E7%9F%A5%E5%8F%82%E6%95%B0%E7%9A%84%E8%AE%A4%E8%AF%86%E4%B8%8A%E6%9D%A5%E7%90%86%E8%A7%A3"><span class="nav-number">1.1.3.</span> <span class="nav-text">从对未知参数的认识上来理解</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%88%E9%AA%8C%E5%88%86%E5%B8%83%E3%80%81%E5%90%8E%E9%AA%8C%E5%88%86%E5%B8%83%E5%92%8C%E5%85%B1%E8%BD%AD%E5%88%86%E5%B8%83"><span class="nav-number">1.2.</span> <span class="nav-text">先验分布、后验分布和共轭分布</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%85%88%E9%AA%8C%E5%88%86%E5%B8%83"><span class="nav-number">1.2.1.</span> <span class="nav-text">先验分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%90%8E%E9%AA%8C%E5%88%86%E5%B8%83"><span class="nav-number">1.2.2.</span> <span class="nav-text">后验分布</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BC%BC%E7%84%B6%E5%87%BD%E6%95%B0%E4%B8%8E%E5%85%B1%E8%BD%AD%E5%88%86%E5%B8%83"><span class="nav-number">1.2.3.</span> <span class="nav-text">似然函数与共轭分布</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1%E5%92%8C%E6%9C%80%E5%A4%A7%E5%90%8E%E9%AA%8C%E6%A6%82%E7%8E%87%E4%BC%B0%E8%AE%A1"><span class="nav-number">1.3.</span> <span class="nav-text">最大似然估计和最大后验概率估计</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1"><span class="nav-number">1.3.1.</span> <span class="nav-text">最大似然估计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%80%E5%A4%A7%E5%90%8E%E9%AA%8C%E6%A6%82%E7%8E%87%E4%BC%B0%E8%AE%A1"><span class="nav-number">1.3.2.</span> <span class="nav-text">最大后验概率估计</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%B3%E7%AD%96%E7%90%86%E8%AE%BA-%E5%8D%9A%E5%BC%88%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text">决策理论(博弈论)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%8F%E9%AA%8C%E9%A3%8E%E9%99%A9%E6%9C%80%E5%B0%8F%E5%8C%96"><span class="nav-number">2.1.</span> <span class="nav-text">经验风险最小化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%BB%93%E6%9E%84%E9%A3%8E%E9%99%A9%E6%9C%80%E5%B0%8F%E5%8C%96"><span class="nav-number">2.2.</span> <span class="nav-text">结构风险最小化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%86%B3%E7%AD%96"><span class="nav-number">2.3.</span> <span class="nav-text">贝叶斯决策</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%9D%E5%8F%B6%E6%96%AF%E5%86%B3%E7%AD%96%E7%9A%84%E4%B8%80%E8%88%AC%E8%BF%87%E7%A8%8B"><span class="nav-number">2.3.1.</span> <span class="nav-text">贝叶斯决策的一般过程</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Simon Sun"
+      src="/simon-blog.github.io/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Simon Sun</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/simon-blog.github.io/archives/">
+        
+          <span class="site-state-item-count">4</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/simon-blog.github.io/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/simon-blog.github.io/tags/">
+          
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/JAVAN000B" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JAVAN000B" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:smh335789877@gmail.com" title="E-Mail → mailto:smh335789877@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Simon Sun</span>
+</div>
+
+    <div>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+        <span class="post-meta-divider">|</span>
+    </span>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+    </span>
+    </div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/simon-blog.github.io/lib/anime.min.js"></script>
+  <script src="/simon-blog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/simon-blog.github.io/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/simon-blog.github.io/js/utils.js"></script>
+
+<script src="/simon-blog.github.io/js/motion.js"></script>
+
+
+<script src="/simon-blog.github.io/js/schemes/pisces.js"></script>
+
+
+<script src="/simon-blog.github.io/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/simon-blog.github.io/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
