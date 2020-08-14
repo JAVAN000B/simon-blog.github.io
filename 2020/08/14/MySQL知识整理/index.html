@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/simon-blog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/simon-blog.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/simon-blog.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/simon-blog.github.io/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/simon-blog.github.io/css/main.css">
+
+
+<link rel="stylesheet" href="/simon-blog.github.io/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javan000b.github.io","root":"/simon-blog.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="问数据库的东西肯定问sql的，你说你会redics，你会nosql。好的，项目用过吗，请开始你的表演。还是老老实实和他谈关系型数据库吧。这其中一般时间都在问你索引，不想被面试官怼穿就老老实实复习吧。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL知识整理">
+<meta property="og:url" content="https://javan000b.github.io/simon-blog.github.io/2020/08/14/MySQL%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="At least, keep busy">
+<meta property="og:description" content="问数据库的东西肯定问sql的，你说你会redics，你会nosql。好的，项目用过吗，请开始你的表演。还是老老实实和他谈关系型数据库吧。这其中一般时间都在问你索引，不想被面试官怼穿就老老实实复习吧。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2020/08/14/die76J.jpg">
+<meta property="article:published_time" content="2020-08-14T13:15:34.000Z">
+<meta property="article:modified_time" content="2020-08-14T14:32:52.537Z">
+<meta property="article:author" content="Simon Sun">
+<meta property="article:tag" content="知识整理">
+<meta property="article:tag" content="MySQL">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/08/14/die76J.jpg">
+
+<link rel="canonical" href="https://javan000b.github.io/simon-blog.github.io/2020/08/14/MySQL%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>MySQL知识整理 | At least, keep busy</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/simon-blog.github.io/atom.xml" title="At least, keep busy" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/simon-blog.github.io/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">At least, keep busy</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/simon-blog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/simon-blog.github.io/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/simon-blog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/simon-blog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/simon-blog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://javan000b.github.io/simon-blog.github.io/2020/08/14/MySQL%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/simon-blog.github.io/images/avatar.jpg">
+      <meta itemprop="name" content="Simon Sun">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="At least, keep busy">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL知识整理
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-08-14 21:15:34 / Modified: 22:32:52" itemprop="dateCreated datePublished" datetime="2020-08-14T21:15:34+08:00">2020-08-14</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/simon-blog.github.io/categories/%E6%95%B4%E7%90%86%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">整理总结</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>问数据库的东西肯定问sql的，你说你会redics，你会nosql。好的，项目用过吗，请开始你的表演。还是老老实实和他谈关系型数据库吧。这其中一般时间都在问你索引，不想被面试官怼穿就老老实实复习吧。</p>
+<a id="more"></a>
+<h2 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h2><ol>
+<li><p>如何查看某个语法</p>
+<p>在query语句前面加？</p>
+<p>值得注意的是需要和在query语句前加explain区分，后面会提到explain，简单说explain是用来检查语句执行效率的，主要看使用索引的效率。</p>
+</li>
+<li><p>MySQL储存引擎</p>
+<p>MYISAM，Innodb，memory，merge，csv，…其他我也没听过了</p>
+<p>常用的就两种，最多加一个memory</p>
+<p>|          | MYIsAM                                                       | Innodb                                                       |<br>| ———— | —————————————————————————————— | :—————————————————————————————- |<br>| 文件     | 每个MyISAM在磁盘上存储成三个文件。第一个 文件的名字以表的名字开始，扩展名指出文件类型。<br/>.frm文件存储表定义。<br/>数据文件的扩 展名为.MYD (MYData)。<br/>索引文件的扩 展名是.MYI (MYIndex)。<br/> 因为使用的是非簇集索引 | 基于磁盘的资源是InnoDB表空间数据文件和它的日志文件，InnoDB 表的 大小只受限于操作系统文件的大小，一般为 2GB |<br>| 事务处理 | MyISAM类型的表强调的是性能，其执行数 度比InnoDB类型更快，但是不提供事务支持 <br/> 如果执行大量的SELECT，MyISAM是更好的选择。 | InnoDB提供事务支持事务，外部键等高级 数据库功能.如果在应用中执行大量insert和update操作，应该选择InnoDB。清空整个表时，InnoDB是一行一行的删除，效率非常慢。 |<br>| 锁       | 表锁                                                         | 提供行锁(locking on row level)，提供与 <a target="_blank" rel="noopener" href="http://www.ha97.com/category/database/oracle-database">Oracle</a> 类型一致的不加锁读取(non-locking read in<br/>SELECTs)，另外，InnoDB表的行锁也不是绝对的，如果在执 行一个SQL语句时MySQL不能确定要扫描的范围，InnoDB表同样会锁全表，例如update table set num=1 where name like “%aaa%” |<br>| 表的行数 | MyISAM只要简单的读出保存好的行数即可。                       | InnoDB需要扫描一遍整个表来计算有多少行                       |</p>
+<p>基本的差别为：</p>
+<p>MyISAM类型不支持事务处理等高级处理，而InnoDB类型支持。MyISAM类型的表强调的是性能，其执行数度比InnoDB类型更快，但是不提供事务支持，而InnoDB提供事务支持已经外部键等高级数据库功能。</p>
+<p>MyISAM的索引和数据是分开的，并且索引是有压缩的，内存使用率就对应提高了不少。能加载更多索引，而Innodb是索引和数据是紧密捆绑的，没有使用压缩从而会造成Innodb比MyISAM体积庞大不小。MyISAM缓存在内存的是索引，不是数据。而InnoDB缓存在内存的是数据，相对来说，服务器内存越大，InnoDB发挥的优势越大。</p>
+<p>Innodb是事务安全的。AUTOCOMMIT默认设置是打开的，而且程序没有显式调用BEGIN 开始事务，导致每插入一条都自动Commit，严重影响了速度。可以在执行sql前调用begin，多条sql形成一个事物（即使autocommit打开也可以），将大大提高性能。</p>
+</li>
+<li><p>选择合适的数据类型</p>
+<ol>
+<li>MyISAM 数据存储引擎和数据列 MyISAM数据表，最好使用固定长度的数据列代替可变长度的数据列。</li>
+<li>MEMORY存储引擎和数据列 MEMORY数据表目前都使用固定长度的数据行存储，因此无论使用CHAR或VARCHAR列都没有关系。两者都是作为CHAR类型处理的。</li>
+<li>InnoDB 存储引擎和数据列 建议使用 VARCHAR类型  对于InnoDB数据表，内部的行存储格式没有区分固定长度和可变长度列(所有数据行 都使用指向数据列值的头指针)  ，因此在本质上，使用固定长度的CHAR列不一定比使 用可变长度VARCHAR列简单。 因而， 主要的性能因素是数据行使用的存储总量。 由于  CHAR 平均占用的空间多于VARCHAR，因此使用VARCHAR来最小化需要处理的数据行的存储总 量和磁盘I/O是比较好的。</li>
+</ol>
+</li>
+<li><p>ID自增不连续</p>
+<p>唯一键冲突是导致自增主键id不连续的第一种原因</p>
+<p>事务回滚是导致自增主键id不连续的第二种原因</p>
+<p>批量申请自增id的策略是导致自增主键id不连续的第三种原因</p>
+<p>解决:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">alter table name auto_increment &#x3D; 1;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>3NF</p>
+<ul>
+<li>1NF 指的是数据库表中的任何属性都具有原子性的，不可再分解</li>
+<li>2NF 是对记录的惟一性约束，要求记录有惟一标识，即实体的惟一性</li>
+<li>3NF是对字段冗余性的约束，即任何字段不能由其他字段派生出来，它要求字段没有冗余</li>
+</ul>
+</li>
+<li><p>事务4个特性</p>
+<ul>
+<li><strong>原子性 Atomicity：</strong>一个事务中的所有操作，要么全部完成，要么全部不完成，最小的执行单位。</li>
+<li><strong>一致性 Consistency：</strong>事务执行前后，都处于一致性状态。</li>
+<li><strong>隔离性 Isolation：</strong>数据库允许多个并发事务同时对其数据进行读写和修改的能力，隔离性可以防止多个事务并发执行时由于交叉执行而导致数据的不一致。</li>
+<li><strong>持久性 Durability：</strong>事务执行完成后，对数据的修改就是永久的，即便系统故障也不会丢失。</li>
+</ul>
+</li>
+<li><p>事务的隔离等级</p>
+<ul>
+<li>READ_UNCOMMITTED 这是事务最低的隔离级别，它允许另外一个事务可以看到这个事务未提交的数据。解决第一类丢失更新的问题，但是会出现脏读、不可重复读、第二类丢失更新的问题，幻读 。</li>
+<li>READ_COMMITTED 保证一个事务修改的数据提交后才能被另外一个事务读取，即另外一个事务不能读取该事务未提交的数据。解决第一类丢失更新和脏读的问题，但会出现不可重复读、第二类丢失更新的问题，幻读问题</li>
+<li>REPEATABLE_READ 保证一个事务相同条件下前后两次获取的数据是一致的 （注意是 一个事务，可以理解为事务间的数据互不影响）解决第一类丢失更新，脏读、不可重复读、第二类丢失更新的问题，但会出幻读。</li>
+<li>SERIALIZABLE 事务串行执行，解决了脏读、不可重复读、幻读。但效率很差，所以实际中一般不用。</li>
+</ul>
+</li>
+<li><p>死锁</p>
+<ul>
+<li><p>互斥条件：进程要求对所分配的资源进行排它性控制，即在一段时间内某资源仅为一进程所占用。</p>
+</li>
+<li><p>请求和保持条件：当进程因请求资源而阻塞时，对已获得的资源保持不放。</p>
+</li>
+<li><p>不剥夺条件：进程已获得的资源在未使用完之前，不能剥夺，只能在使用完时由自己释放。</p>
+</li>
+<li><p>环路等待条件：在发生死锁时，必然存在一个进程—资源的环形链。</p>
+<p>怎么解决：</p>
+<ul>
+<li>设置超时时间。超时后自动释放。</li>
+<li>发起死锁检测，主动回滚其中一条事务，让其他事务继续执行。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>创建用户，授权</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE USER &#39;username&#39;@&#39;host&#39; IDENTIFIED BY &#39;password&#39;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">GRANT privileges ON databasename.tablename TO &#39;username&#39;@&#39;host&#39;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MySQL删除方式</p>
+<ul>
+<li>delete : 仅删除表数据，支持条件过滤，支持回滚。记录日志。因此比较慢。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">delete from table_name;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>truncate: 仅删除所有数据，不支持条件过滤，不支持回滚。不记录日志，效率高于delete。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">truncate table table_name;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>drop:删除表数据同时删除表结构。将表所占的空间都释放掉。删除效率最高。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">drop table table_name;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>MVVC</p>
+<p>MVCC 全称是多版本并发控制系统，InnoDB 的 MVCC  是通过在每行记录后面保存两个隐藏的列来实现，这两个列一个保存了行的创建时间，一个保存行的过期时间（删除时间）。当然存储的并不是真实的时间而是系统版本号（system version  number）。每开始一个新的事务，系统版本号都会自动新增，事务开始时刻的系统版本号会作为事务的版本号，用来查询到每行记录的版本号进行比较。</p>
+</li>
+<li><p>MySQL使用流程</p>
+<p>客户端连接数据库，验证身份。</p>
+<p>获取当前用户权限。</p>
+<p>当你查询时，会先去缓存看看，如果有返回。</p>
+<p>如果没有，分析器对sql做词法分析。</p>
+<p>优化器对sql进行“它认为比较好的优化”。</p>
+<p>执行器负责具体执行sql语句。</p>
+<p>最后把数据返回给客户端。</p>
+</li>
+<li><p>视图</p>
+<p>视图(View)是一种虚拟存在的表，对于使用视图的用户来说基本上是透明的。视图并 不在数据库中实际存在，行和列数据来自定义视图的查询中使用的表，并且是在使用视图时 动态生成的。</p>
+<p>视图相对于普通的表的优势主要包括以下几项。</p>
+<ul>
+<li>简单:使用视图的用户完全不需要关心后面对应的表的结构、关联条件和筛选条件， 对用户来说已经是过滤好的复合条件的结果集。</li>
+<li>安全:使用视图的用户只能访问他们被允许查询的结果集，对表的权限管理并不能 限制到某个行某个列，但是通过视图就可以简单的实现。</li>
+<li>数据独立:一旦视图的结构确定了，可以屏蔽表结构变化对用户的影响，源表增加 列对视图没有影响;源表修改列名，则可以通过修改视图来解决，不会造成对访问 者的影响。</li>
+</ul>
+</li>
+<li><p><strong>Explain的用法</strong></p>
+<p>| column          | meaning                |<br>| ———————- | ——————————— |<br>| id              | 查询序号               |<br>| <strong>select_type</strong> | join类型               |<br>| table           | 表名                   |<br>| partitions      | 匹配的分区             |<br>| <strong>type</strong>        | 查询类型               |<br>| possible_keys   | 可能选择的索引         |<br>| key             | 实际选择的索引         |<br>| key_len         | 索引长度               |<br>| ref             | 与索引比较的列         |<br>| rows            | 要检查的行数（估算值） |<br>| filtered        | 查询条件过滤行数百分比 |<br>| Extra           | extra                  |</p>
+</li>
+<li><p>select_type</p>
+<p><img src="https://s1.ax1x.com/2020/08/14/die76J.jpg" alt="die76J.jpg"></p>
+</li>
+<li><p>type</p>
+<p>这是<strong>最重要的字段之一</strong>，显示查询使用了何种类型。从最好到最差的连接类型依次为：</p>
+<blockquote>
+<p>system，const，eq_ref，ref，fulltext，ref_or_null，index_merge，unique_subquery，index_subquery，range，index，ALL</p>
+</blockquote>
+<p>1、system</p>
+<p>表中只有一行数据或者是空表，这是const类型的一个特例。且只能用于myisam和memory表。如果是Innodb引擎表，type列在这个情况通常都是all或者index</p>
+<p>2、const</p>
+<p>最多只有一行记录匹配。当联合主键或唯一索引的所有字段跟常量值比较时，join类型为const。其他数据库也叫做唯一索引扫描</p>
+<p>3、eq_ref</p>
+<p>多表join时，对于来自前面表的每一行，在当前表中只能找到一行。这可能是除了system和const之外最好的类型。当主键或唯一非NULL索引的所有字段都被用作join联接时会使用此类型。</p>
+<p>eq_ref可用于使用’=’操作符作比较的索引列。比较的值可以是常量，也可以是使用在此表之前读取的表的列的表达式。</p>
+<blockquote>
+<p>相对于下面的ref区别就是它使用的唯一索引，即主键或唯一索引，而ref使用的是非唯一索引或者普通索引。 eq_ref只能找到一行，而ref能找到多行。</p>
+</blockquote>
+<p>4、ref</p>
+<p>对于来自前面表的每一行，在此表的索引中可以匹配到多行。若联接只用到索引的最左前缀或索引不是主键或唯一索引时，使用ref类型（也就是说，此联接能够匹配多行记录）。</p>
+<p>ref可用于使用’=’或’&lt;=&gt;’操作符作比较的索引列。</p>
+<p>5、 fulltext</p>
+<p>使用全文索引的时候是这个类型。要注意，<strong>全文索引的优先级很高</strong>，若全文索引和普通索引同时存在时，mysql不管代价，优先选择使用全文索引</p>
+<p>6、ref_or_null</p>
+<p>跟ref类型类似，只是增加了null值的比较。实际用的不多。</p>
+<p>7、index_merge</p>
+<p>表示查询使用了两个以上的索引，最后取交集或者并集，常见and ，or的条件使用了不同的索引，官方排序这个在ref_or_null之后，但是实际上由于要读取多个索引，性能可能大部分时间都不如range</p>
+<p>8、unique_subquery</p>
+<p>用于where中的in形式子查询，子查询返回不重复值唯一值，可以完全替换子查询，效率更高。 该类型替换了下面形式的IN子查询的ref：  value IN (SELECT primary_key FROM single_table WHERE some_expr)</p>
+<p>9、index_subquery</p>
+<p>该联接类型类似于unique_subquery。适用于非唯一索引，可以返回重复值。</p>
+<p>10、range</p>
+<p>索引范围查询，常见于使用 =, &lt;&gt;, &gt;, &gt;=, &lt;, &lt;=, IS NULL, &lt;=&gt;, BETWEEN, IN()或者like等运算符的查询中。</p>
+<p>11、index</p>
+<p>索引全表扫描，把索引从头到尾扫一遍。这里包含两种情况：  一种是查询使用了覆盖索引，那么它只需要扫描索引就可以获得数据，这个效率要比全表扫描要快，因为索引通常比数据表小，而且还能避免二次查询。在extra中显示Using index，反之，如果在索引上进行全表扫描，没有Using index的提示。</p>
+<p>12、all</p>
+<p>全表扫描，性能最差。</p>
+</li>
+</ol>
+<h3 id="最后"><a href="#最后" class="headerlink" title="最后"></a>最后</h3><p>关于索引的部分请参考下一篇文章，都写在一起实在有点多啊。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/simon-blog.github.io/tags/%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/" rel="tag"># 知识整理</a>
+              <a href="/simon-blog.github.io/tags/MySQL/" rel="tag"># MySQL</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/simon-blog.github.io/2020/08/09/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89/" rel="prev" title="机器学习笔记（一）">
+      <i class="fa fa-chevron-left"></i> 机器学习笔记（一）
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">常见问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%80%E5%90%8E"><span class="nav-number">1.1.</span> <span class="nav-text">最后</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Simon Sun"
+      src="/simon-blog.github.io/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Simon Sun</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/simon-blog.github.io/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/simon-blog.github.io/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/simon-blog.github.io/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/JAVAN000B" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JAVAN000B" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:smh335789877@gmail.com" title="E-Mail → mailto:smh335789877@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Simon Sun</span>
+</div>
+
+    <div>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+        <span class="post-meta-divider">|</span>
+    </span>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+    </span>
+    </div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/simon-blog.github.io/lib/anime.min.js"></script>
+  <script src="/simon-blog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/simon-blog.github.io/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/simon-blog.github.io/js/utils.js"></script>
+
+<script src="/simon-blog.github.io/js/motion.js"></script>
+
+
+<script src="/simon-blog.github.io/js/schemes/pisces.js"></script>
+
+
+<script src="/simon-blog.github.io/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/simon-blog.github.io/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
