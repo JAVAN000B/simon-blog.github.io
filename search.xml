@@ -434,10 +434,10 @@ minR_i(x) = \sum^c_{j=1}\lambda_j^{(i)}P(w_j|x)</script><h4 id="贝叶斯决策�
 | filtered        | 查询条件过滤行数百分比 |
 | Extra           | extra                  |
 </code></pre><ol>
-<li><p>select_type</p>
+<li><p>select_type参数</p>
 <p><img src="https://s1.ax1x.com/2020/08/14/die76J.jpg" alt="die76J.jpg"></p>
 </li>
-<li><p>type</p>
+<li><p>type参数</p>
 <p>这是<strong>最重要的字段之一</strong>，显示查询使用了何种类型。从最好到最差的连接类型依次为：</p>
 <blockquote>
 <p>system，const，eq_ref，ref，fulltext，ref_or_null，index_merge，unique_subquery，index_subquery，range，index，ALL</p>
