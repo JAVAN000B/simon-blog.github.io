@@ -283,12 +283,46 @@ minR_i(x) = \sum^c_{j=1}\lambda_j^{(i)}P(w_j|x)</script><h4 id="贝叶斯决策�
 <li><p>MySQL储存引擎</p>
 <p>MYISAM，Innodb，memory，merge，csv，…其他我也没听过了</p>
 <p>常用的就两种，最多加一个memory</p>
-<p>|          | MYIsAM                                                       | Innodb                                                       |<br>| ———— | —————————————————————————————— | :—————————————————————————————- |<br>| 文件     | 每个MyISAM在磁盘上存储成三个文件。第一个 文件的名字以表的名字开始，扩展名指出文件类型。<br/>.frm文件存储表定义。<br/>数据文件的扩 展名为.MYD (MYData)。<br/>索引文件的扩 展名是.MYI (MYIndex)。<br/> 因为使用的是非簇集索引 | 基于磁盘的资源是InnoDB表空间数据文件和它的日志文件，InnoDB 表的 大小只受限于操作系统文件的大小，一般为 2GB |<br>| 事务处理 | MyISAM类型的表强调的是性能，其执行数 度比InnoDB类型更快，但是不提供事务支持 <br/> 如果执行大量的SELECT，MyISAM是更好的选择。 | InnoDB提供事务支持事务，外部键等高级 数据库功能.如果在应用中执行大量insert和update操作，应该选择InnoDB。清空整个表时，InnoDB是一行一行的删除，效率非常慢。 |<br>| 锁       | 表锁                                                         | 提供行锁(locking on row level)，提供与 <a href="http://www.ha97.com/category/database/oracle-database">Oracle</a> 类型一致的不加锁读取(non-locking read in<br/>SELECTs)，另外，InnoDB表的行锁也不是绝对的，如果在执 行一个SQL语句时MySQL不能确定要扫描的范围，InnoDB表同样会锁全表，例如update table set num=1 where name like “%aaa%” |<br>| 表的行数 | MyISAM只要简单的读出保存好的行数即可。                       | InnoDB需要扫描一遍整个表来计算有多少行                       |</p>
-<p>基本的差别为：</p>
-<p>MyISAM类型不支持事务处理等高级处理，而InnoDB类型支持。MyISAM类型的表强调的是性能，其执行数度比InnoDB类型更快，但是不提供事务支持，而InnoDB提供事务支持已经外部键等高级数据库功能。</p>
-<p>MyISAM的索引和数据是分开的，并且索引是有压缩的，内存使用率就对应提高了不少。能加载更多索引，而Innodb是索引和数据是紧密捆绑的，没有使用压缩从而会造成Innodb比MyISAM体积庞大不小。MyISAM缓存在内存的是索引，不是数据。而InnoDB缓存在内存的是数据，相对来说，服务器内存越大，InnoDB发挥的优势越大。</p>
-<p>Innodb是事务安全的。AUTOCOMMIT默认设置是打开的，而且程序没有显式调用BEGIN 开始事务，导致每插入一条都自动Commit，严重影响了速度。可以在执行sql前调用begin，多条sql形成一个事物（即使autocommit打开也可以），将大大提高性能。</p>
 </li>
+</ol>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MYIsAM</th>
+<th style="text-align:left">Innodb</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件</td>
+<td>每个MyISAM在磁盘上存储成三个文件。第一个 文件的名字以表的名字开始，扩展名指出文件类型。<br/>.frm文件存储表定义。<br/>数据文件的扩 展名为.MYD (MYData)。<br/>索引文件的扩 展名是.MYI (MYIndex)。<br/> 因为使用的是非簇集索引</td>
+<td style="text-align:left">基于磁盘的资源是InnoDB表空间数据文件和它的日志文件，InnoDB 表的 大小只受限于操作系统文件的大小，一般为 2GB</td>
+</tr>
+<tr>
+<td>事务处理</td>
+<td>MyISAM类型的表强调的是性能，其执行数 度比InnoDB类型更快，但是不提供事务支持 <br/> 如果执行大量的SELECT，MyISAM是更好的选择。</td>
+<td style="text-align:left">InnoDB提供事务支持事务，外部键等高级 数据库功能.如果在应用中执行大量insert和update操作，应该选择InnoDB。清空整个表时，InnoDB是一行一行的删除，效率非常慢。</td>
+</tr>
+<tr>
+<td>锁</td>
+<td>表锁</td>
+<td style="text-align:left">提供行锁(locking on row level)，提供与 <a href="http://www.ha97.com/category/database/oracle-database">Oracle</a> 类型一致的不加锁读取(non-locking read in<br/>SELECTs)，另外，InnoDB表的行锁也不是绝对的，如果在执 行一个SQL语句时MySQL不能确定要扫描的范围，InnoDB表同样会锁全表，例如update table set num=1 where name like “%aaa%”</td>
+</tr>
+<tr>
+<td>表的行数</td>
+<td>MyISAM只要简单的读出保存好的行数即可。</td>
+<td style="text-align:left">InnoDB需要扫描一遍整个表来计算有多少行</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>   基本的差别为：</p>
+<p>   MyISAM类型不支持事务处理等高级处理，而InnoDB类型支持。MyISAM类型的表强调的是性能，其执行数度比InnoDB类型更快，但是不提供事务支持，而InnoDB提供事务支持已经外部键等高级数据库功能。</p>
+<p>   MyISAM的索引和数据是分开的，并且索引是有压缩的，内存使用率就对应提高了不少。能加载更多索引，而Innodb是索引和数据是紧密捆绑的，没有使用压缩从而会造成Innodb比MyISAM体积庞大不小。MyISAM缓存在内存的是索引，不是数据。而InnoDB缓存在内存的是数据，相对来说，服务器内存越大，InnoDB发挥的优势越大。</p>
+<p>   Innodb是事务安全的。AUTOCOMMIT默认设置是打开的，而且程序没有显式调用BEGIN 开始事务，导致每插入一条都自动Commit，严重影响了速度。可以在执行sql前调用begin，多条sql形成一个事物（即使autocommit打开也可以），将大大提高性能。</p>
+<ol>
 <li><p>选择合适的数据类型</p>
 <ol>
 <li>MyISAM 数据存储引擎和数据列 MyISAM数据表，最好使用固定长度的数据列代替可变长度的数据列。</li>
@@ -383,8 +417,23 @@ minR_i(x) = \sum^c_{j=1}\lambda_j^{(i)}P(w_j|x)</script><h4 id="贝叶斯决策�
 </ul>
 </li>
 <li><p><strong>Explain的用法</strong></p>
-<p>| column          | meaning                |<br>| ———————- | ——————————— |<br>| id              | 查询序号               |<br>| <strong>select_type</strong> | join类型               |<br>| table           | 表名                   |<br>| partitions      | 匹配的分区             |<br>| <strong>type</strong>        | 查询类型               |<br>| possible_keys   | 可能选择的索引         |<br>| key             | 实际选择的索引         |<br>| key_len         | 索引长度               |<br>| ref             | 与索引比较的列         |<br>| rows            | 要检查的行数（估算值） |<br>| filtered        | 查询条件过滤行数百分比 |<br>| Extra           | extra                  |</p>
 </li>
+</ol>
+<pre><code>| column          | meaning                |
+| --------------- | ---------------------- |
+| id              | 查询序号               |
+| **select_type** | join类型               |
+| table           | 表名                   |
+| partitions      | 匹配的分区             |
+| **type**        | 查询类型               |
+| possible_keys   | 可能选择的索引         |
+| key             | 实际选择的索引         |
+| key_len         | 索引长度               |
+| ref             | 与索引比较的列         |
+| rows            | 要检查的行数（估算值） |
+| filtered        | 查询条件过滤行数百分比 |
+| Extra           | extra                  |
+</code></pre><ol>
 <li><p>select_type</p>
 <p><img src="https://s1.ax1x.com/2020/08/14/die76J.jpg" alt="die76J.jpg"></p>
 </li>
@@ -433,5 +482,10 @@ minR_i(x) = \sum^c_{j=1}\lambda_j^{(i)}P(w_j|x)</script><h4 id="贝叶斯决策�
         <tag>知识整理</tag>
         <tag>MySQL</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>MySQL索引知识</title>
+    <url>/simon-blog.github.io/2020/08/14/MySQL%E7%B4%A2%E5%BC%95%E7%9F%A5%E8%AF%86/</url>
+    <content><![CDATA[]]></content>
   </entry>
 </search>
