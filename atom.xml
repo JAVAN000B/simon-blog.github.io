@@ -6,7 +6,7 @@
   <link href="/simon-blog.github.io/atom.xml" rel="self"/>
   
   <link href="https://javan000b.github.io/simon-blog.github.io/"/>
-  <updated>2020-08-15T08:43:50.486Z</updated>
+  <updated>2020-08-15T14:33:53.927Z</updated>
   <id>https://javan000b.github.io/simon-blog.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>计算机网络知识整理</title>
+    <link href="https://javan000b.github.io/simon-blog.github.io/2020/08/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/"/>
+    <id>https://javan000b.github.io/simon-blog.github.io/2020/08/15/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/</id>
+    <published>2020-08-15T09:45:28.000Z</published>
+    <updated>2020-08-15T14:33:53.927Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;面试3板斧， 数据库，操作系统，计算机网络。 什么你说语言？这个，不同岗位面不同语言吗，但上面这三个是跑不掉的。索性计算机网络需要掌握的没有数据库来的多。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="整理总结" scheme="https://javan000b.github.io/simon-blog.github.io/categories/%E6%95%B4%E7%90%86%E6%80%BB%E7%BB%93/"/>
+    
+    
+      <category term="知识整理" scheme="https://javan000b.github.io/simon-blog.github.io/tags/%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/"/>
+    
+      <category term="网络" scheme="https://javan000b.github.io/simon-blog.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
   
   <entry>
     <title>MySQL索引知识</title>
