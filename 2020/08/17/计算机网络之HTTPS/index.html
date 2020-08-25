@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/simon-blog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/simon-blog.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/simon-blog.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/simon-blog.github.io/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/simon-blog.github.io/css/main.css">
+
+
+<link rel="stylesheet" href="/simon-blog.github.io/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javan000b.github.io","root":"/simon-blog.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="HTTPS 超文本传输安全协议（英语：Hypertext Transfer Protocol Secure，缩写：HTTPS，常称为HTTP over TLS，HTTP over SSL或HTTP Secure）是一种通过计算机网络进行安全通信的传输协议。HTTPS经由HTTP进行通信，但利用SSL&#x2F;TLS来加密数据包。HTTPS开发的主要目的，是提供对网站服务器的身份认证，保护交换数据的隐私与完">
+<meta property="og:type" content="article">
+<meta property="og:title" content="计算机网络之HTTPS">
+<meta property="og:url" content="https://javan000b.github.io/simon-blog.github.io/2020/08/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS/index.html">
+<meta property="og:site_name" content="At least, keep busy">
+<meta property="og:description" content="HTTPS 超文本传输安全协议（英语：Hypertext Transfer Protocol Secure，缩写：HTTPS，常称为HTTP over TLS，HTTP over SSL或HTTP Secure）是一种通过计算机网络进行安全通信的传输协议。HTTPS经由HTTP进行通信，但利用SSL&#x2F;TLS来加密数据包。HTTPS开发的主要目的，是提供对网站服务器的身份认证，保护交换数据的隐私与完">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2020/08/23/d0W3LT.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/08/24/dDY5eP.jpg">
+<meta property="og:image" content="https://s1.ax1x.com/2020/08/24/dDXezV.png">
+<meta property="article:published_time" content="2020-08-17T13:13:08.000Z">
+<meta property="article:modified_time" content="2020-08-24T09:14:33.113Z">
+<meta property="article:author" content="Simon Sun">
+<meta property="article:tag" content="知识整理">
+<meta property="article:tag" content="网络">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/08/23/d0W3LT.png">
+
+<link rel="canonical" href="https://javan000b.github.io/simon-blog.github.io/2020/08/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>计算机网络之HTTPS | At least, keep busy</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/simon-blog.github.io/atom.xml" title="At least, keep busy" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/simon-blog.github.io/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">At least, keep busy</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/simon-blog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/simon-blog.github.io/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/simon-blog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/simon-blog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/simon-blog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://javan000b.github.io/simon-blog.github.io/2020/08/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/simon-blog.github.io/images/avatar.jpg">
+      <meta itemprop="name" content="Simon Sun">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="At least, keep busy">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          计算机网络之HTTPS
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2020-08-17 21:13:08" itemprop="dateCreated datePublished" datetime="2020-08-17T21:13:08+08:00">2020-08-17</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-08-24 17:14:33" itemprop="dateModified" datetime="2020-08-24T17:14:33+08:00">2020-08-24</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/simon-blog.github.io/categories/%E6%95%B4%E7%90%86%E6%80%BB%E7%BB%93/" itemprop="url" rel="index"><span itemprop="name">整理总结</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><blockquote>
+<p><strong>超文本传输安全协议</strong>（英语：<strong>Hypertext Transfer Protocol Secure</strong>，<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B8%AE%E5%AF%AB">缩写</a>：<strong>HTTPS</strong>，常称为<strong>HTTP over TLS</strong>，<strong>HTTP over SSL</strong>或<strong>HTTP Secure</strong>）是一种通过<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E8%A8%88%E7%AE%97%E6%A9%9F%E7%B6%B2%E7%B5%A1">计算机网络</a>进行安全通信的<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF%E5%82%B3%E8%BC%B8%E5%8D%94%E5%AE%9A">传输协议</a>。HTTPS经由<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/HTTP">HTTP</a>进行通信，<strong>但利用</strong><a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E4%BC%A0%E8%BE%93%E5%B1%82%E5%AE%89%E5%85%A8">SSL/TLS</a><strong>来加密数据包</strong>。HTTPS开发的主要目的，是提供对<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E7%AB%99">网站</a>服务器的<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81">身份认证</a>，保护交换数据的隐私与<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E5%AE%8C%E6%95%B4%E6%80%A7">完整性</a>。这个协议由<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E6%99%AF">网景</a>公司（Netscape）在1994年首次提出，随后扩展到<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E9%9A%9B%E7%B6%B2%E8%B7%AF">互联网</a>上。</p>
+</blockquote>
+<a id="more"></a>
+<p><strong>Http和https的区别</strong></p>
+<p>Http协议运行在TCP之上，明文传输，客户端与服务器端都无法验证对方的身份；Https是身披SSL(Secure Socket  Layer)外壳的Http，运行于SSL()上，SSL运行于TCP之上，是添加了加密和认证机制的HTTP。二者之间存在如下不同：</p>
+<ul>
+<li>端口不同：Http与Http使用不同的连接方式，用的端口也不一样，前者是80，后者是443；</li>
+<li>资源消耗：和HTTP通信相比，Https通信会由于加减密处理消耗更多的CPU和内存资源；</li>
+<li>开销：Https通信需要证书，而证书一般需要向认证机构购买； </li>
+<li>Https的加密机制是一种共享密钥加密和公开密钥加密并用的混合加密机制。</li>
+</ul>
+<h3 id="为何要用https"><a href="#为何要用https" class="headerlink" title="为何要用https"></a><strong>为何要用https</strong></h3><h4 id="http协议的缺点"><a href="#http协议的缺点" class="headerlink" title="http协议的缺点"></a>http协议的缺点</h4><ul>
+<li>通信使用明文，内容可能被窃听(重要密码泄露)</li>
+<li>不验证通信方身份，有可能遭遇伪装(跨站点请求伪造)</li>
+<li>无法证明报文的完整性，有可能已遭篡改(运营商劫持)(中间人攻击)</li>
+</ul>
+<h4 id="用https能解决这些问题么？"><a href="#用https能解决这些问题么？" class="headerlink" title="用https能解决这些问题么？"></a>用https能解决这些问题么？</h4><p>https是在http协议基础上加入加密处理和认证机制以及完整性保护，即http+加密+认证+完整性保护=https<br>https并非应用层的一种新协议，只是http通信接口部分用ssl/tls协议代替而已。通常http直接和tcp通信，当使用ssl时则演变成先和ssl通信，再由ssl和tcp通信。<br>所谓https，其实就是身披ssl协议这层外壳的http</p>
+<p><img src="https://s1.ax1x.com/2020/08/23/d0W3LT.png" alt="d0W3LT.png"></p>
+<p>SSL协议位于TCP/IP协议与各种应用层协议之间，为数据通讯提供安全支持。SSL协议可分为两层：</p>
+<ul>
+<li>SSL记录协议（SSL Record Protocol）：它建立在可靠的传输协议（如TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。</li>
+<li>SSL握手协议（SSL Handshake Protocol）：它建立在SSL记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。</li>
+</ul>
+<h3 id="对称秘钥加密和非对称秘钥加密"><a href="#对称秘钥加密和非对称秘钥加密" class="headerlink" title="对称秘钥加密和非对称秘钥加密"></a>对称秘钥加密和非对称秘钥加密</h3><p>对称密钥加密，又称私钥加密，即信息的发送方和接收方用同一个密钥去加密和解密数据。</p>
+<ul>
+<li>它的最大优势是加/解密速度快，适合于对大数据量进行加密，但密钥管理困难且较为不安全。</li>
+<li>进行一对一的双向保密通信。</li>
+<li>常见的对称加密算法：DES，AES等。</li>
+</ul>
+<p>非对称密钥加密，又称公钥加密，它需要使用一对密钥来分别完成加密和解密操作，一个公开发布，即公开密钥，另一个由用户自己秘密保存，即私用密钥。信息发送者用公开密钥去加密，而信息接收者则用私用密钥去解密。</p>
+<ul>
+<li>从功能角度而言非对称加密比对称加密功能强大且较为安全，但加密和解密速度却比对称密钥加密慢得多。</li>
+<li>多对一的单向保密通信。</li>
+<li>最常用的非对称加密算法：RSA</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://imgchr.com/i/dDY5eP"><img src="https://s1.ax1x.com/2020/08/24/dDY5eP.jpg" alt="dDY5eP.jpg"></a></p>
+<h3 id="SSL-TLS协议基本原理"><a href="#SSL-TLS协议基本原理" class="headerlink" title="SSL/TLS协议基本原理"></a>SSL/TLS协议基本原理</h3><p>SSL/TLS协议的基本思路是采用公钥加密法，也就是说，客户端先向服务器端索要公钥，然后用公钥加密信息，服务器收到密文后，用自己的私钥解密，但是这里有两个问题：<br> （1）、如何保证公钥不被篡改？<br> 解决方法：将公钥放在数字证书中，只要证书是可信的，公钥就是可信的。<br> （<strong>2）、公钥加密计算量太大，如何减少耗用的时间？</strong><br> 解决方法：每一次对话（session），客户端和服务器端都生成一个”对话密钥”（session key），用它来加密信息。由于”对话密钥”是对称加密，所以运算速度非常快，而服务器公钥只用于加密”对话密钥”本身，这样就减少了加密运算的消耗时间。</p>
+<p>因此，SSL/TLS协议的基本过程是这样的：</p>
+<ol>
+<li>客户端向服务器端索要并验证公钥。</li>
+<li>双方协商生成“对话密钥”。</li>
+<li>双方采用“对话密钥”进行加密通信。</li>
+</ol>
+<p>第一步，爱丽丝给出协议版本号、一个客户端生成的随机数（Client random），以及客户端支持的加密方法，具体的加密方法可参考<a target="_blank" rel="noopener" href="https://www.cnblogs.com/cioliuguilan/p/5518798.html">SSL证书背后的加密算法</a>。<br> 第二步，鲍勃确认双方使用的加密方法，并给出数字证书、以及一个服务器生成的随机数（Server random）。<br> 第三步，爱丽丝确认数字证书有效，然后生成一个新的随机数（Premaster secret），并使用数字证书中的公钥，加密这个随机数，发给鲍勃。<br> 第四步，鲍勃使用自己的私钥，获取爱丽丝发来的随机数（即Premaster secret）。<br> 第五步，爱丽丝和鲍勃根据约定的加密方法，使用前面的三个随机数，生成”对话密钥”（session key），用来加密接下来的整个对话过程。</p>
+<h3 id="HTTPS工作原理"><a href="#HTTPS工作原理" class="headerlink" title="HTTPS工作原理"></a>HTTPS工作原理</h3><p><a target="_blank" rel="noopener" href="https://imgchr.com/i/dDXezV"><img src="https://s1.ax1x.com/2020/08/24/dDXezV.png" alt="dDXezV.png"></a></p>
+<h3 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h3><p>Session 与 Cookie 的对比capable</p>
+<p>实现机制：Session的实现常常依赖于Cookie机制，通过Cookie机制回传SessionID；</p>
+<p>大小限制：Cookie有大小限制并且浏览器对每个站点也有cookie的个数限制，Session没有大小限制，理论上只与服务器的内存大小有关；</p>
+<p>安全性：Cookie存在安全隐患，通过拦截或本地文件找得到cookie后可以进行攻击，而Session由于保存在服务器端，相对更加安全；</p>
+<p>服务器资源消耗：Session是保存在服务器端上会存在一段时间才会消失，如果session过多会增加服务器的压力。</p>
+<p>存放位置：cookie数据存放在客户的浏览器上，session数据放在服务器上。</p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/simon-blog.github.io/tags/%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/" rel="tag"># 知识整理</a>
+              <a href="/simon-blog.github.io/tags/%E7%BD%91%E7%BB%9C/" rel="tag"># 网络</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/simon-blog.github.io/2020/08/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/" rel="prev" title="机器学习笔记（二）">
+      <i class="fa fa-chevron-left"></i> 机器学习笔记（二）
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/simon-blog.github.io/2020/08/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/" rel="next" title="机器学习笔记（三）">
+      机器学习笔记（三） <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS"><span class="nav-number">1.</span> <span class="nav-text">HTTPS</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BD%95%E8%A6%81%E7%94%A8https"><span class="nav-number">1.1.</span> <span class="nav-text">为何要用https</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#http%E5%8D%8F%E8%AE%AE%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="nav-number">1.1.1.</span> <span class="nav-text">http协议的缺点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%94%A8https%E8%83%BD%E8%A7%A3%E5%86%B3%E8%BF%99%E4%BA%9B%E9%97%AE%E9%A2%98%E4%B9%88%EF%BC%9F"><span class="nav-number">1.1.2.</span> <span class="nav-text">用https能解决这些问题么？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E7%A7%B0%E7%A7%98%E9%92%A5%E5%8A%A0%E5%AF%86%E5%92%8C%E9%9D%9E%E5%AF%B9%E7%A7%B0%E7%A7%98%E9%92%A5%E5%8A%A0%E5%AF%86"><span class="nav-number">1.2.</span> <span class="nav-text">对称秘钥加密和非对称秘钥加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSL-TLS%E5%8D%8F%E8%AE%AE%E5%9F%BA%E6%9C%AC%E5%8E%9F%E7%90%86"><span class="nav-number">1.3.</span> <span class="nav-text">SSL&#x2F;TLS协议基本原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTPS%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="nav-number">1.4.</span> <span class="nav-text">HTTPS工作原理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%A2%98%E5%A4%96%E8%AF%9D"><span class="nav-number">1.5.</span> <span class="nav-text">题外话</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Simon Sun"
+      src="/simon-blog.github.io/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Simon Sun</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/simon-blog.github.io/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/simon-blog.github.io/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/simon-blog.github.io/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/JAVAN000B" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JAVAN000B" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:smh335789877@gmail.com" title="E-Mail → mailto:smh335789877@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Simon Sun</span>
+</div>
+
+    <div>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+        <span class="post-meta-divider">|</span>
+    </span>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+    </span>
+    </div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/simon-blog.github.io/lib/anime.min.js"></script>
+  <script src="/simon-blog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/simon-blog.github.io/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/simon-blog.github.io/js/utils.js"></script>
+
+<script src="/simon-blog.github.io/js/motion.js"></script>
+
+
+<script src="/simon-blog.github.io/js/schemes/pisces.js"></script>
+
+
+<script src="/simon-blog.github.io/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/simon-blog.github.io/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1036,6 +1036,7 @@ minR_i(x) = \sum^c_{j=1}\lambda_j^{(i)}P(w_j|x)</script><h4 id="贝叶斯决策�
     <title>机器学习笔记（二）</title>
     <url>/simon-blog.github.io/2020/08/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/</url>
     <content><![CDATA[<h2 id="线性模型"><a href="#线性模型" class="headerlink" title="线性模型"></a>线性模型</h2><p>核心思想，不论是进行分类还是寻找模型，我都去寻找一个形如 y= kx +b的形式去描述我的模型，可以拓展为如下表达式：</p>
+<a id="more"></a>
 <script type="math/tex; mode=display">
 f(x) = w_1x_1+w_2x_2+...+w_dx_d+b</script><p>向量表示为：</p>
 <script type="math/tex; mode=display">
@@ -1079,6 +1080,143 @@ g(y) = ln(\frac{y}{1-y})</script><p>我们得到了“对数几率回归”（lo
       <tags>
         <tag>机器学习</tag>
         <tag>学校</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>机器学习笔记（三）</title>
+    <url>/simon-blog.github.io/2020/08/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/</url>
+    <content><![CDATA[<p>姗姗来迟的笔记三，之前一直在摸鱼。现在该接着整活了。看了统计学习方法这本书，有一种终于找到组织的感觉。</p>
+<a id="more"></a>
+<h2 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h2><h3 id="为什么需要正则项"><a href="#为什么需要正则项" class="headerlink" title="为什么需要正则项"></a>为什么需要正则项</h3><ul>
+<li>为了解决一些不适定问题<ul>
+<li>什么是不适定问题，即不满足一下条件：<ul>
+<li>解必须存在</li>
+<li>解必须唯一</li>
+<li>解能根据初始条件连续变化，不会发生跳变，即解必须稳定</li>
+</ul>
+</li>
+<li>但其实这是利用了正则项在模型中的性质，这些连续问题必须使其离散，以取得数值解。泛函分析问题通常是连续的，当以有限精度或存有错误的资料求解时，它可以承受这些数值的不稳定性。</li>
+</ul>
+</li>
+<li>具体来说，在使用损失作为判断模型好坏时，正则项通常作为一个惩罚项，使得本来“很好”的模型变得不那么好。即使一个问题是适定的，它也可能仍是病态的；即在初始资料中的一个微小错误，可以造成很大错误的答案。病态问题以大的条件数表示。</li>
+</ul>
+<p>在图中，我们可以这样表示正则项</p>
+<p><img src="https://s1.ax1x.com/2020/08/25/dgvrZt.png" alt="dgvrZt.png"></p>
+<p>可以看到，我们并没有选择中心的那个经验风险最小的模型，而是选择了和正则项相交的模型。这是为了解决过拟合问题，为了模型更好的范化能力。</p>
+<p>公式：在经验损失后面加的就是正则项</p>
+<script type="math/tex; mode=display">
+\hat \theta \in argmin(L(data,\theta)+\lambda R(\theta))</script><h3 id="损失和模型复杂度之间的关系"><a href="#损失和模型复杂度之间的关系" class="headerlink" title="损失和模型复杂度之间的关系"></a>损失和模型复杂度之间的关系</h3><p>简单用两张图表示</p>
+<p><img src="https://s1.ax1x.com/2020/08/25/d2kpTJ.png" alt="d2kpTJ.png"></p>
+<p>模型越复杂，经验损失越小，对于测试数据的误差可能会变大</p>
+<p><img src="https://s1.ax1x.com/2020/08/25/d2knTH.png" alt="d2knTH.png"></p>
+<p>第二张自己想一想</p>
+<h2 id="PAC理论"><a href="#PAC理论" class="headerlink" title="PAC理论"></a>PAC理论</h2><h3 id="什么是PAC学习理论？"><a href="#什么是PAC学习理论？" class="headerlink" title="什么是PAC学习理论？"></a>什么是PAC学习理论？</h3><p>   先说一下机器学习。机器学习有两个元素：模型与数据。其中模型又包含两部分：优化算法与假设空间。所谓机器学习就是用优化算法从假设空间中选择一个假设，使此假设能符合给定的数据描述。因此优化算法通俗的讲就是假设选择算法。</p>
+<p>   而PAC学习理论不关心假设选择算法，他关心的是<strong>能否</strong>从假设空间 <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BH%7D" alt="[公式]"> 中学习一个好的假设 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> <strong>。</strong>看到<strong>能否</strong>二字了没？此理论不关心怎样在假设空间中寻找好的假设，只关心能不能找得到。现在我们在来看一下什么叫“好假设”？只要满足两个条件(PAC辨识条件)即可:</p>
+<ul>
+<li>近似正确：泛化误差 <img src="https://www.zhihu.com/equation?tex=E%28h%29" alt="[公式]"> 足够小</li>
+</ul>
+<blockquote>
+<p><img src="https://www.zhihu.com/equation?tex=E%28h%29" alt="[公式]"> 越小越好，最好泛化误差能能于0，但一般是不可能的。那我们就把 <img src="https://www.zhihu.com/equation?tex=E%28h%29" alt="[公式]"> 限定在一个很小的数 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon" alt="[公式]">之内，即只要假设 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> 满足 <img src="https://www.zhihu.com/equation?tex=E%28h%29%5Cle%5Cepsilon" alt="[公式]"> ，我们就认为 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> 是正确的。</p>
+</blockquote>
+<ul>
+<li>可能正确</li>
+</ul>
+<blockquote>
+<p>  不指望选择的假设 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> 百分之百是近似正确的（按上段所述，即 <img src="https://www.zhihu.com/equation?tex=E%28h%29%5Cle%5Cepsilon" alt="[公式]"> ），只要<strong>很可能</strong>是近似正确的就可以，即我们给定一个值 <img src="https://www.zhihu.com/equation?tex=%5Cdelta" alt="[公式]"> ，假设 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> 满足 <img src="https://www.zhihu.com/equation?tex=P%28h%E8%BF%91%E4%BC%BC%E6%AD%A3%E7%A1%AE%29%5Cge1-%5Cdelta" alt="[公式]">。</p>
+</blockquote>
+<p>  综上两点，就得到了PAC（可能近似正确，probably approximate correct）可学习的定义。简单的讲就是模型在短时间内利用少量的(多项式级别)样本能够找到一个假设 <img src="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D" alt="[公式]"> ，使其满足 <img src="https://www.zhihu.com/equation?tex=%5Cdisplaystyle+P%28E%28h+%5E%7B%27%7D%29%5Cle%5Cepsilon%29%5Cge1-%5Cdelta%5Cqquad0%5Clt%5Cepsilon%2C%5Cdelta%5Clt1" alt="[公式]"> 。</p>
+<h3 id="什么条件能满足PAC可学习？"><a href="#什么条件能满足PAC可学习？" class="headerlink" title="什么条件能满足PAC可学习？"></a>什么条件能满足PAC可学习？</h3><p>  先介绍下Hoeffding不等式：</p>
+<blockquote>
+<p>  Hoeffding不等式：给定m个取值[0,1]之间的独立随机变量 <img src="https://www.zhihu.com/equation?tex=x_1%2C+x_2%2C+%5Cldots+%2Cx_n" alt="[公式]">，对任意 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon%5Cgt0" alt="[公式]">有如下等式成立： <img src="https://www.zhihu.com/equation?tex=%5Cdisplaystyle+P%28%5Cvert%5Cfrac1m%5Csum_%7Bi%3D1%7D%5Emx_i-%5Cfrac1m%5Csum_%7Bi%3D1%7D%5EmE%28x_i%29%5Cvert%5Cge%5Cepsilon%29%5Cle%7B2e%5E%7B-2m%5Cepsilon%5E2%7D%7D" alt="[公式]"> </p>
+</blockquote>
+<p>  由泛化误差 <img src="https://www.zhihu.com/equation?tex=E%28h%29" alt="[公式]"> 与经验误差 <img src="https://www.zhihu.com/equation?tex=%5Chat%7BE%7D%28h%29" alt="[公式]"> 的定义易知 <img src="https://www.zhihu.com/equation?tex=E%28%5Chat%7BE%7D%28h%29%29%3DE%28h%29" alt="[公式]"> ，因此可推出公式（1）： <img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Bmatrix%7D%5Cforall+h+%5Cin+%5Cmathcal%7BH%7D%26P%28%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cge%5Cepsilon%29%5Cle%7B2e%5E%7B-2m%5Cepsilon%5E2%7D%7D%26%5Ctext%7B%E5%85%AC%E5%BC%8F%281%29%7D%5Cend%7Bmatrix%7D%5C%5C" alt="[公式]"> </p>
+<p>  根据不等式（1）可推出公式（2）: <img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Bmatrix%7D%5Cforall+h+%5Cin+%5Cmathcal%7BH%7D%26P%28%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cle%5Cepsilon%29%5Cge%7B1-2%5Cvert%7B%5Cmathcal%7BH%7D%7D%5Cvert%7Be%5E%7B-2m%5Cepsilon%5E2%7D%7D%7D%26%5Ctext%7B%E5%85%AC%E5%BC%8F%282%29%7D%5Cend%7Bmatrix%7D%5C%5C" alt="[公式]"> </p>
+<blockquote>
+<p>  公式（2）简要证明: <img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Balign%7D+P%28%5Cforall+%7Bh%7D+%5Cin+%5Cmathcal%7BH%7D%3A%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cle%5Cepsilon%29+%26%3D+1-P%28%5Cexists%7Bh%7D%5Cin%5Cmathcal%7BH%7D%3A%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cge%5Cepsilon%29+%5C%5C+%26%3D+1-P%28%28%5Cvert%7BE%28h_1%29-%5Chat%7BE%7D%28h_1%29%7D%5Cvert%5Cge%5Cepsilon%29%5Clor%28%5Cvert%7BE%28h_2%29-%5Chat%7BE%7D%28h_2%29%7D%5Cvert%5Cge%5Cepsilon%29%5Clor%5Ccdots%5Clor%28%5Cvert%7BE%28h_%7B%5Cvert%5Cmathcal%7BH%7D%5Cvert%7D%29-%5Chat%7BE%7D%28h_%7B%5Cvert%5Cmathcal%7BH%7D%5Cvert%7D%29%7D%5Cvert%5Cge%5Cepsilon%29%29%5C%5C+%26%5Cge+1-%5Csum_%7Bi%3D1%7D%5E%7B%5Cvert%5Cmathcal%7BH%7D%5Cvert%7DP%28%5Cvert%7BE%28h_i%29-%5Chat%7BE%7D%28h_i%29%7D%5Cvert%5Cge%5Cepsilon%29%5C%5C+%26%5Cge+%7B1-2%5Cvert%7B%5Cmathcal%7BH%7D%7D%5Cvert%7Be%5E%7B-2m%5Cepsilon%5E2%7D%7D%7D+%5Cend%7Balign%7D" alt="[公式]"> </p>
+</blockquote>
+<p>  公式（2）说明了什么？说明了对于任意 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon" alt="[公式]"> ，样本数量 <img src="https://www.zhihu.com/equation?tex=m" alt="[公式]"> 越大， <img src="https://www.zhihu.com/equation?tex=%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cle%5Cepsilon" alt="[公式]"> 发生的可能性也越大，此时我们可以用经验误差近似泛化误差。回到一开始我们提出的那两个问题：</p>
+<ol>
+<li>为什么在训练样本上学习得到的假设会在真实样本上有效？公式（2）很好的说明了这一问题。只要样本数量 <img src="https://www.zhihu.com/equation?tex=m" alt="[公式]"> 足够大或者假设空间的大小 <img src="https://www.zhihu.com/equation?tex=%5Cvert%5Cmathcal%7BH%7D%5Cvert" alt="[公式]"> 足够小，就能保证学到的假设 <img src="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D" alt="[公式]"> 的泛化误差 <img src="https://www.zhihu.com/equation?tex=E%28h%5E%7B%27%7D%29" alt="[公式]"> 与经验误差 <img src="https://www.zhihu.com/equation?tex=%5Chat%7BE%7D%28h%5E%7B%27%7D%29" alt="[公式]"> 足够接近。 <img src="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D" alt="[公式]"> 在训练样本上的表现与在真实样本上一致。</li>
+<li><p>为什么少量样本用CNN/RNN等复杂模型会导致过拟合？还是看公式（2）。样本数量m太小的话 <img src="https://www.zhihu.com/equation?tex=%5Cvert%7BE%28h%5E%7B%27%7D%29-%5Chat%7BE%7D%28h%5E%7B%27%7D%29%7D%5Cvert%5Cle%5Cepsilon" alt="[公式]"> 发生的可能性变小。<strong>即学到的 <img src="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D" alt="[公式]"> 在训练样本上的表现与在真实样本上不一致，这是过拟合直接的表现形式</strong>。</p>
+<p>对以上两点的解释没有考虑 <img src="https://www.zhihu.com/equation?tex=%5Cvert%5Cmathcal%7BH%7D%5Cvert" alt="[公式]"> 为无穷大情况，但不影响大家理解。实际上如果 <img src="https://www.zhihu.com/equation?tex=%5Cvert%5Cmathcal%7BH%7D%5Cvert" alt="[公式]"> 为无穷大，VC维照样可以给出类似解释。  </p>
+<p>现在开始解决我们本小节提出的问题。什么条件才能满足PAC可学习?还是看公式（2），另 <img src="https://www.zhihu.com/equation?tex=%5Cdelta%3D2%5Cvert%7B%5Cmathcal%7BH%7D%7D%5Cvert%7Be%5E%7B-2m%5Cepsilon%5E2%7D%7D" alt="[公式]"> ，即:</p>
+</li>
+</ol>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Bmatrix%7Dm%3DM%3D%5Cfrac%7B%5Cln%5E%7B%5Cfrac%7B2%5Cvert%5Cmathcal%7BH%7D%5Cvert%7D%7B%5Cdelta%7D%7D%7D%7B2%5Cepsilon%5E2%7D%26%5Ctext%7B%E5%85%AC%E5%BC%8F%283%29%7D%5Cend%7Bmatrix%7D" alt="[公式]"> </p>
+<p>本小节结论：只要样本数量 <img src="https://www.zhihu.com/equation?tex=m" alt="[公式]"> 大于公式（3）中的 <img src="https://www.zhihu.com/equation?tex=M" alt="[公式]"> ，就能保证模型在当前条件下是PAC可学习的。 </p>
+<p>相关链接：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/30965398">通俗易懂PAC理论</a></p>
+]]></content>
+      <categories>
+        <category>笔记</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>学校</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>计算机网络之HTTPS</title>
+    <url>/simon-blog.github.io/2020/08/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS/</url>
+    <content><![CDATA[<h2 id="HTTPS"><a href="#HTTPS" class="headerlink" title="HTTPS"></a>HTTPS</h2><blockquote>
+<p><strong>超文本传输安全协议</strong>（英语：<strong>Hypertext Transfer Protocol Secure</strong>，<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B8%AE%E5%AF%AB">缩写</a>：<strong>HTTPS</strong>，常称为<strong>HTTP over TLS</strong>，<strong>HTTP over SSL</strong>或<strong>HTTP Secure</strong>）是一种通过<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E8%A8%88%E7%AE%97%E6%A9%9F%E7%B6%B2%E7%B5%A1">计算机网络</a>进行安全通信的<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF%E5%82%B3%E8%BC%B8%E5%8D%94%E5%AE%9A">传输协议</a>。HTTPS经由<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/HTTP">HTTP</a>进行通信，<strong>但利用</strong><a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E4%BC%A0%E8%BE%93%E5%B1%82%E5%AE%89%E5%85%A8">SSL/TLS</a><strong>来加密数据包</strong>。HTTPS开发的主要目的，是提供对<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E7%AB%99">网站</a>服务器的<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81">身份认证</a>，保护交换数据的隐私与<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E5%AE%8C%E6%95%B4%E6%80%A7">完整性</a>。这个协议由<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E6%99%AF">网景</a>公司（Netscape）在1994年首次提出，随后扩展到<a href="https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E9%9A%9B%E7%B6%B2%E8%B7%AF">互联网</a>上。</p>
+</blockquote>
+<a id="more"></a>
+<p><strong>Http和https的区别</strong></p>
+<p>Http协议运行在TCP之上，明文传输，客户端与服务器端都无法验证对方的身份；Https是身披SSL(Secure Socket  Layer)外壳的Http，运行于SSL()上，SSL运行于TCP之上，是添加了加密和认证机制的HTTP。二者之间存在如下不同：</p>
+<ul>
+<li>端口不同：Http与Http使用不同的连接方式，用的端口也不一样，前者是80，后者是443；</li>
+<li>资源消耗：和HTTP通信相比，Https通信会由于加减密处理消耗更多的CPU和内存资源；</li>
+<li>开销：Https通信需要证书，而证书一般需要向认证机构购买； </li>
+<li>Https的加密机制是一种共享密钥加密和公开密钥加密并用的混合加密机制。</li>
+</ul>
+<h3 id="为何要用https"><a href="#为何要用https" class="headerlink" title="为何要用https"></a><strong>为何要用https</strong></h3><h4 id="http协议的缺点"><a href="#http协议的缺点" class="headerlink" title="http协议的缺点"></a>http协议的缺点</h4><ul>
+<li>通信使用明文，内容可能被窃听(重要密码泄露)</li>
+<li>不验证通信方身份，有可能遭遇伪装(跨站点请求伪造)</li>
+<li>无法证明报文的完整性，有可能已遭篡改(运营商劫持)(中间人攻击)</li>
+</ul>
+<h4 id="用https能解决这些问题么？"><a href="#用https能解决这些问题么？" class="headerlink" title="用https能解决这些问题么？"></a>用https能解决这些问题么？</h4><p>https是在http协议基础上加入加密处理和认证机制以及完整性保护，即http+加密+认证+完整性保护=https<br>https并非应用层的一种新协议，只是http通信接口部分用ssl/tls协议代替而已。通常http直接和tcp通信，当使用ssl时则演变成先和ssl通信，再由ssl和tcp通信。<br>所谓https，其实就是身披ssl协议这层外壳的http</p>
+<p><img src="https://s1.ax1x.com/2020/08/23/d0W3LT.png" alt="d0W3LT.png"></p>
+<p>SSL协议位于TCP/IP协议与各种应用层协议之间，为数据通讯提供安全支持。SSL协议可分为两层：</p>
+<ul>
+<li>SSL记录协议（SSL Record Protocol）：它建立在可靠的传输协议（如TCP）之上，为高层协议提供数据封装、压缩、加密等基本功能的支持。</li>
+<li>SSL握手协议（SSL Handshake Protocol）：它建立在SSL记录协议之上，用于在实际的数据传输开始前，通讯双方进行身份认证、协商加密算法、交换加密密钥等。</li>
+</ul>
+<h3 id="对称秘钥加密和非对称秘钥加密"><a href="#对称秘钥加密和非对称秘钥加密" class="headerlink" title="对称秘钥加密和非对称秘钥加密"></a>对称秘钥加密和非对称秘钥加密</h3><p>对称密钥加密，又称私钥加密，即信息的发送方和接收方用同一个密钥去加密和解密数据。</p>
+<ul>
+<li>它的最大优势是加/解密速度快，适合于对大数据量进行加密，但密钥管理困难且较为不安全。</li>
+<li>进行一对一的双向保密通信。</li>
+<li>常见的对称加密算法：DES，AES等。</li>
+</ul>
+<p>非对称密钥加密，又称公钥加密，它需要使用一对密钥来分别完成加密和解密操作，一个公开发布，即公开密钥，另一个由用户自己秘密保存，即私用密钥。信息发送者用公开密钥去加密，而信息接收者则用私用密钥去解密。</p>
+<ul>
+<li>从功能角度而言非对称加密比对称加密功能强大且较为安全，但加密和解密速度却比对称密钥加密慢得多。</li>
+<li>多对一的单向保密通信。</li>
+<li>最常用的非对称加密算法：RSA</li>
+</ul>
+<p><a href="https://imgchr.com/i/dDY5eP"><img src="https://s1.ax1x.com/2020/08/24/dDY5eP.jpg" alt="dDY5eP.jpg"></a></p>
+<h3 id="SSL-TLS协议基本原理"><a href="#SSL-TLS协议基本原理" class="headerlink" title="SSL/TLS协议基本原理"></a>SSL/TLS协议基本原理</h3><p>SSL/TLS协议的基本思路是采用公钥加密法，也就是说，客户端先向服务器端索要公钥，然后用公钥加密信息，服务器收到密文后，用自己的私钥解密，但是这里有两个问题：<br> （1）、如何保证公钥不被篡改？<br> 解决方法：将公钥放在数字证书中，只要证书是可信的，公钥就是可信的。<br> （<strong>2）、公钥加密计算量太大，如何减少耗用的时间？</strong><br> 解决方法：每一次对话（session），客户端和服务器端都生成一个”对话密钥”（session key），用它来加密信息。由于”对话密钥”是对称加密，所以运算速度非常快，而服务器公钥只用于加密”对话密钥”本身，这样就减少了加密运算的消耗时间。</p>
+<p>因此，SSL/TLS协议的基本过程是这样的：</p>
+<ol>
+<li>客户端向服务器端索要并验证公钥。</li>
+<li>双方协商生成“对话密钥”。</li>
+<li>双方采用“对话密钥”进行加密通信。</li>
+</ol>
+<p>第一步，爱丽丝给出协议版本号、一个客户端生成的随机数（Client random），以及客户端支持的加密方法，具体的加密方法可参考<a href="https://www.cnblogs.com/cioliuguilan/p/5518798.html">SSL证书背后的加密算法</a>。<br> 第二步，鲍勃确认双方使用的加密方法，并给出数字证书、以及一个服务器生成的随机数（Server random）。<br> 第三步，爱丽丝确认数字证书有效，然后生成一个新的随机数（Premaster secret），并使用数字证书中的公钥，加密这个随机数，发给鲍勃。<br> 第四步，鲍勃使用自己的私钥，获取爱丽丝发来的随机数（即Premaster secret）。<br> 第五步，爱丽丝和鲍勃根据约定的加密方法，使用前面的三个随机数，生成”对话密钥”（session key），用来加密接下来的整个对话过程。</p>
+<h3 id="HTTPS工作原理"><a href="#HTTPS工作原理" class="headerlink" title="HTTPS工作原理"></a>HTTPS工作原理</h3><p><a href="https://imgchr.com/i/dDXezV"><img src="https://s1.ax1x.com/2020/08/24/dDXezV.png" alt="dDXezV.png"></a></p>
+<h3 id="题外话"><a href="#题外话" class="headerlink" title="题外话"></a>题外话</h3><p>Session 与 Cookie 的对比capable</p>
+<p>实现机制：Session的实现常常依赖于Cookie机制，通过Cookie机制回传SessionID；</p>
+<p>大小限制：Cookie有大小限制并且浏览器对每个站点也有cookie的个数限制，Session没有大小限制，理论上只与服务器的内存大小有关；</p>
+<p>安全性：Cookie存在安全隐患，通过拦截或本地文件找得到cookie后可以进行攻击，而Session由于保存在服务器端，相对更加安全；</p>
+<p>服务器资源消耗：Session是保存在服务器端上会存在一段时间才会消失，如果session过多会增加服务器的压力。</p>
+<p>存放位置：cookie数据存放在客户的浏览器上，session数据放在服务器上。</p>
+]]></content>
+      <categories>
+        <category>整理总结</category>
+      </categories>
+      <tags>
+        <tag>知识整理</tag>
+        <tag>网络</tag>
       </tags>
   </entry>
 </search>

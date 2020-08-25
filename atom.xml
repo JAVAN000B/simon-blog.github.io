@@ -6,7 +6,7 @@
   <link href="/simon-blog.github.io/atom.xml" rel="self"/>
   
   <link href="https://javan000b.github.io/simon-blog.github.io/"/>
-  <updated>2020-08-16T13:43:02.622Z</updated>
+  <updated>2020-08-25T14:58:48.732Z</updated>
   <id>https://javan000b.github.io/simon-blog.github.io/</id>
   
   <author>
@@ -17,21 +17,63 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>机器学习笔记（三）</title>
+    <link href="https://javan000b.github.io/simon-blog.github.io/2020/08/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/"/>
+    <id>https://javan000b.github.io/simon-blog.github.io/2020/08/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/</id>
+    <published>2020-08-25T11:53:09.000Z</published>
+    <updated>2020-08-25T14:58:48.732Z</updated>
+    
+    <summary type="html">
+    
+      &lt;p&gt;姗姗来迟的笔记三，之前一直在摸鱼。现在该接着整活了。看了统计学习方法这本书，有一种终于找到组织的感觉。&lt;/p&gt;
+    
+    </summary>
+    
+    
+      <category term="笔记" scheme="https://javan000b.github.io/simon-blog.github.io/categories/%E7%AC%94%E8%AE%B0/"/>
+    
+    
+      <category term="机器学习" scheme="https://javan000b.github.io/simon-blog.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+      <category term="学校" scheme="https://javan000b.github.io/simon-blog.github.io/tags/%E5%AD%A6%E6%A0%A1/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>计算机网络之HTTPS</title>
+    <link href="https://javan000b.github.io/simon-blog.github.io/2020/08/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS/"/>
+    <id>https://javan000b.github.io/simon-blog.github.io/2020/08/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS/</id>
+    <published>2020-08-17T13:13:08.000Z</published>
+    <updated>2020-08-24T09:14:33.113Z</updated>
+    
+    <summary type="html">
+    
+      &lt;h2 id=&quot;HTTPS&quot;&gt;&lt;a href=&quot;#HTTPS&quot; class=&quot;headerlink&quot; title=&quot;HTTPS&quot;&gt;&lt;/a&gt;HTTPS&lt;/h2&gt;&lt;blockquote&gt;
+&lt;p&gt;&lt;strong&gt;超文本传输安全协议&lt;/strong&gt;（英语：&lt;strong&gt;Hypertext Transfer Protocol Secure&lt;/strong&gt;，&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B8%AE%E5%AF%AB&quot;&gt;缩写&lt;/a&gt;：&lt;strong&gt;HTTPS&lt;/strong&gt;，常称为&lt;strong&gt;HTTP over TLS&lt;/strong&gt;，&lt;strong&gt;HTTP over SSL&lt;/strong&gt;或&lt;strong&gt;HTTP Secure&lt;/strong&gt;）是一种通过&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E8%A8%88%E7%AE%97%E6%A9%9F%E7%B6%B2%E7%B5%A1&quot;&gt;计算机网络&lt;/a&gt;进行安全通信的&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E8%B7%AF%E5%82%B3%E8%BC%B8%E5%8D%94%E5%AE%9A&quot;&gt;传输协议&lt;/a&gt;。HTTPS经由&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/HTTP&quot;&gt;HTTP&lt;/a&gt;进行通信，&lt;strong&gt;但利用&lt;/strong&gt;&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E4%BC%A0%E8%BE%93%E5%B1%82%E5%AE%89%E5%85%A8&quot;&gt;SSL/TLS&lt;/a&gt;&lt;strong&gt;来加密数据包&lt;/strong&gt;。HTTPS开发的主要目的，是提供对&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E7%AB%99&quot;&gt;网站&lt;/a&gt;服务器的&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E8%BA%AB%E4%BB%BD%E9%AA%8C%E8%AF%81&quot;&gt;身份认证&lt;/a&gt;，保护交换数据的隐私与&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E5%AE%8C%E6%95%B4%E6%80%A7&quot;&gt;完整性&lt;/a&gt;。这个协议由&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E6%99%AF&quot;&gt;网景&lt;/a&gt;公司（Netscape）在1994年首次提出，随后扩展到&lt;a href=&quot;https://link.zhihu.com/?target=https%3A//zh.wikipedia.org/wiki/%E7%B6%B2%E9%9A%9B%E7%B6%B2%E8%B7%AF&quot;&gt;互联网&lt;/a&gt;上。&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+    
+      <category term="整理总结" scheme="https://javan000b.github.io/simon-blog.github.io/categories/%E6%95%B4%E7%90%86%E6%80%BB%E7%BB%93/"/>
+    
+    
+      <category term="知识整理" scheme="https://javan000b.github.io/simon-blog.github.io/tags/%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/"/>
+    
+      <category term="网络" scheme="https://javan000b.github.io/simon-blog.github.io/tags/%E7%BD%91%E7%BB%9C/"/>
+    
+  </entry>
+  
+  <entry>
     <title>机器学习笔记（二）</title>
     <link href="https://javan000b.github.io/simon-blog.github.io/2020/08/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/"/>
     <id>https://javan000b.github.io/simon-blog.github.io/2020/08/16/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89/</id>
     <published>2020-08-16T11:07:54.000Z</published>
-    <updated>2020-08-16T13:43:02.622Z</updated>
+    <updated>2020-08-25T12:18:36.023Z</updated>
     
     <summary type="html">
     
-      
-      
-        
-        
-          &lt;h2 id=&quot;线性模型&quot;&gt;&lt;a href=&quot;#线性模型&quot; class=&quot;headerlink&quot; title=&quot;线性模型&quot;&gt;&lt;/a&gt;线性模型&lt;/h2&gt;&lt;p&gt;核心思想，不论是进行分类还是寻找模型，我都去寻找一个形如 y= kx
-        
-      
+      &lt;h2 id=&quot;线性模型&quot;&gt;&lt;a href=&quot;#线性模型&quot; class=&quot;headerlink&quot; title=&quot;线性模型&quot;&gt;&lt;/a&gt;线性模型&lt;/h2&gt;&lt;p&gt;核心思想，不论是进行分类还是寻找模型，我都去寻找一个形如 y= kx +b的形式去描述我的模型，可以拓展为如下表达式：&lt;/p&gt;
     
     </summary>
     

@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 5.0.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/simon-blog.github.io/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/simon-blog.github.io/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/simon-blog.github.io/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/simon-blog.github.io/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/simon-blog.github.io/css/main.css">
+
+
+<link rel="stylesheet" href="/simon-blog.github.io/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"javan000b.github.io","root":"/simon-blog.github.io/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+  <meta name="description" content="姗姗来迟的笔记三，之前一直在摸鱼。现在该接着整活了。看了统计学习方法这本书，有一种终于找到组织的感觉。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="机器学习笔记（三）">
+<meta property="og:url" content="https://javan000b.github.io/simon-blog.github.io/2020/08/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/index.html">
+<meta property="og:site_name" content="At least, keep busy">
+<meta property="og:description" content="姗姗来迟的笔记三，之前一直在摸鱼。现在该接着整活了。看了统计学习方法这本书，有一种终于找到组织的感觉。">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://s1.ax1x.com/2020/08/25/dgvrZt.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/08/25/d2kpTJ.png">
+<meta property="og:image" content="https://s1.ax1x.com/2020/08/25/d2knTH.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cmathcal%7BH%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E%28h%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E%28h%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E%28h%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cepsilon">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E%28h%29%5Cle%5Cepsilon">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E%28h%29%5Cle%5Cepsilon">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cdelta">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=P%28h%E8%BF%91%E4%BC%BC%E6%AD%A3%E7%A1%AE%29%5Cge1-%5Cdelta">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cdisplaystyle+P%28E%28h+%5E%7B%27%7D%29%5Cle%5Cepsilon%29%5Cge1-%5Cdelta%5Cqquad0%5Clt%5Cepsilon%2C%5Cdelta%5Clt1">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=x_1%2C+x_2%2C+%5Cldots+%2Cx_n">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cepsilon%5Cgt0">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cdisplaystyle+P%28%5Cvert%5Cfrac1m%5Csum_%7Bi%3D1%7D%5Emx_i-%5Cfrac1m%5Csum_%7Bi%3D1%7D%5EmE%28x_i%29%5Cvert%5Cge%5Cepsilon%29%5Cle%7B2e%5E%7B-2m%5Cepsilon%5E2%7D%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E%28h%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Chat%7BE%7D%28h%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E%28%5Chat%7BE%7D%28h%29%29%3DE%28h%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbegin%7Bmatrix%7D%5Cforall+h+%5Cin+%5Cmathcal%7BH%7D%26P%28%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cge%5Cepsilon%29%5Cle%7B2e%5E%7B-2m%5Cepsilon%5E2%7D%7D%26%5Ctext%7B%E5%85%AC%E5%BC%8F%281%29%7D%5Cend%7Bmatrix%7D%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbegin%7Bmatrix%7D%5Cforall+h+%5Cin+%5Cmathcal%7BH%7D%26P%28%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cle%5Cepsilon%29%5Cge%7B1-2%5Cvert%7B%5Cmathcal%7BH%7D%7D%5Cvert%7Be%5E%7B-2m%5Cepsilon%5E2%7D%7D%7D%26%5Ctext%7B%E5%85%AC%E5%BC%8F%282%29%7D%5Cend%7Bmatrix%7D%5C%5C">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbegin%7Balign%7D+P%28%5Cforall+%7Bh%7D+%5Cin+%5Cmathcal%7BH%7D%3A%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cle%5Cepsilon%29+%26%3D+1-P%28%5Cexists%7Bh%7D%5Cin%5Cmathcal%7BH%7D%3A%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cge%5Cepsilon%29+%5C%5C+%26%3D+1-P%28%28%5Cvert%7BE%28h_1%29-%5Chat%7BE%7D%28h_1%29%7D%5Cvert%5Cge%5Cepsilon%29%5Clor%28%5Cvert%7BE%28h_2%29-%5Chat%7BE%7D%28h_2%29%7D%5Cvert%5Cge%5Cepsilon%29%5Clor%5Ccdots%5Clor%28%5Cvert%7BE%28h_%7B%5Cvert%5Cmathcal%7BH%7D%5Cvert%7D%29-%5Chat%7BE%7D%28h_%7B%5Cvert%5Cmathcal%7BH%7D%5Cvert%7D%29%7D%5Cvert%5Cge%5Cepsilon%29%29%5C%5C+%26%5Cge+1-%5Csum_%7Bi%3D1%7D%5E%7B%5Cvert%5Cmathcal%7BH%7D%5Cvert%7DP%28%5Cvert%7BE%28h_i%29-%5Chat%7BE%7D%28h_i%29%7D%5Cvert%5Cge%5Cepsilon%29%5C%5C+%26%5Cge+%7B1-2%5Cvert%7B%5Cmathcal%7BH%7D%7D%5Cvert%7Be%5E%7B-2m%5Cepsilon%5E2%7D%7D%7D+%5Cend%7Balign%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cepsilon">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=m">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cle%5Cepsilon">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=m">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cvert%5Cmathcal%7BH%7D%5Cvert">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E%28h%5E%7B%27%7D%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Chat%7BE%7D%28h%5E%7B%27%7D%29">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cvert%7BE%28h%5E%7B%27%7D%29-%5Chat%7BE%7D%28h%5E%7B%27%7D%29%7D%5Cvert%5Cle%5Cepsilon">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cvert%5Cmathcal%7BH%7D%5Cvert">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cvert%5Cmathcal%7BH%7D%5Cvert">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cdelta%3D2%5Cvert%7B%5Cmathcal%7BH%7D%7D%5Cvert%7Be%5E%7B-2m%5Cepsilon%5E2%7D%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Cbegin%7Bmatrix%7Dm%3DM%3D%5Cfrac%7B%5Cln%5E%7B%5Cfrac%7B2%5Cvert%5Cmathcal%7BH%7D%5Cvert%7D%7B%5Cdelta%7D%7D%7D%7B2%5Cepsilon%5E2%7D%26%5Ctext%7B%E5%85%AC%E5%BC%8F%283%29%7D%5Cend%7Bmatrix%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=m">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=M">
+<meta property="article:published_time" content="2020-08-25T11:53:09.000Z">
+<meta property="article:modified_time" content="2020-08-25T14:58:48.732Z">
+<meta property="article:author" content="Simon Sun">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="学校">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://s1.ax1x.com/2020/08/25/dgvrZt.png">
+
+<link rel="canonical" href="https://javan000b.github.io/simon-blog.github.io/2020/08/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'en'
+  };
+</script>
+
+  <title>机器学习笔记（三） | At least, keep busy</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/simon-blog.github.io/atom.xml" title="At least, keep busy" type="application/atom+xml">
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="Toggle navigation bar">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/simon-blog.github.io/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">At least, keep busy</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/simon-blog.github.io/" rel="section"><i class="fa fa-home fa-fw"></i>Home</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/simon-blog.github.io/about/" rel="section"><i class="fa fa-user fa-fw"></i>About</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/simon-blog.github.io/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>Tags</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/simon-blog.github.io/categories/" rel="section"><i class="fa fa-th fa-fw"></i>Categories</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/simon-blog.github.io/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>Archives</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>Search
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="Searching..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="en">
+    <link itemprop="mainEntityOfPage" href="https://javan000b.github.io/simon-blog.github.io/2020/08/25/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/simon-blog.github.io/images/avatar.jpg">
+      <meta itemprop="name" content="Simon Sun">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="At least, keep busy">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          机器学习笔记（三）
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+              
+
+              <time title="Created: 2020-08-25 19:53:09 / Modified: 22:58:48" itemprop="dateCreated datePublished" datetime="2020-08-25T19:53:09+08:00">2020-08-25</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/simon-blog.github.io/categories/%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>姗姗来迟的笔记三，之前一直在摸鱼。现在该接着整活了。看了统计学习方法这本书，有一种终于找到组织的感觉。</p>
+<a id="more"></a>
+<h2 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h2><h3 id="为什么需要正则项"><a href="#为什么需要正则项" class="headerlink" title="为什么需要正则项"></a>为什么需要正则项</h3><ul>
+<li>为了解决一些不适定问题<ul>
+<li>什么是不适定问题，即不满足一下条件：<ul>
+<li>解必须存在</li>
+<li>解必须唯一</li>
+<li>解能根据初始条件连续变化，不会发生跳变，即解必须稳定</li>
+</ul>
+</li>
+<li>但其实这是利用了正则项在模型中的性质，这些连续问题必须使其离散，以取得数值解。泛函分析问题通常是连续的，当以有限精度或存有错误的资料求解时，它可以承受这些数值的不稳定性。</li>
+</ul>
+</li>
+<li>具体来说，在使用损失作为判断模型好坏时，正则项通常作为一个惩罚项，使得本来“很好”的模型变得不那么好。即使一个问题是适定的，它也可能仍是病态的；即在初始资料中的一个微小错误，可以造成很大错误的答案。病态问题以大的条件数表示。</li>
+</ul>
+<p>在图中，我们可以这样表示正则项</p>
+<p><img src="https://s1.ax1x.com/2020/08/25/dgvrZt.png" alt="dgvrZt.png"></p>
+<p>可以看到，我们并没有选择中心的那个经验风险最小的模型，而是选择了和正则项相交的模型。这是为了解决过拟合问题，为了模型更好的范化能力。</p>
+<p>公式：在经验损失后面加的就是正则项</p>
+<script type="math/tex; mode=display">
+\hat \theta \in argmin(L(data,\theta)+\lambda R(\theta))</script><h3 id="损失和模型复杂度之间的关系"><a href="#损失和模型复杂度之间的关系" class="headerlink" title="损失和模型复杂度之间的关系"></a>损失和模型复杂度之间的关系</h3><p>简单用两张图表示</p>
+<p><img src="https://s1.ax1x.com/2020/08/25/d2kpTJ.png" alt="d2kpTJ.png"></p>
+<p>模型越复杂，经验损失越小，对于测试数据的误差可能会变大</p>
+<p><img src="https://s1.ax1x.com/2020/08/25/d2knTH.png" alt="d2knTH.png"></p>
+<p>第二张自己想一想</p>
+<h2 id="PAC理论"><a href="#PAC理论" class="headerlink" title="PAC理论"></a>PAC理论</h2><h3 id="什么是PAC学习理论？"><a href="#什么是PAC学习理论？" class="headerlink" title="什么是PAC学习理论？"></a>什么是PAC学习理论？</h3><p>   先说一下机器学习。机器学习有两个元素：模型与数据。其中模型又包含两部分：优化算法与假设空间。所谓机器学习就是用优化算法从假设空间中选择一个假设，使此假设能符合给定的数据描述。因此优化算法通俗的讲就是假设选择算法。</p>
+<p>   而PAC学习理论不关心假设选择算法，他关心的是<strong>能否</strong>从假设空间 <img src="https://www.zhihu.com/equation?tex=%5Cmathcal%7BH%7D" alt="[公式]"> 中学习一个好的假设 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> <strong>。</strong>看到<strong>能否</strong>二字了没？此理论不关心怎样在假设空间中寻找好的假设，只关心能不能找得到。现在我们在来看一下什么叫“好假设”？只要满足两个条件(PAC辨识条件)即可:</p>
+<ul>
+<li>近似正确：泛化误差 <img src="https://www.zhihu.com/equation?tex=E%28h%29" alt="[公式]"> 足够小</li>
+</ul>
+<blockquote>
+<p><img src="https://www.zhihu.com/equation?tex=E%28h%29" alt="[公式]"> 越小越好，最好泛化误差能能于0，但一般是不可能的。那我们就把 <img src="https://www.zhihu.com/equation?tex=E%28h%29" alt="[公式]"> 限定在一个很小的数 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon" alt="[公式]">之内，即只要假设 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> 满足 <img src="https://www.zhihu.com/equation?tex=E%28h%29%5Cle%5Cepsilon" alt="[公式]"> ，我们就认为 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> 是正确的。</p>
+</blockquote>
+<ul>
+<li>可能正确</li>
+</ul>
+<blockquote>
+<p>  不指望选择的假设 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> 百分之百是近似正确的（按上段所述，即 <img src="https://www.zhihu.com/equation?tex=E%28h%29%5Cle%5Cepsilon" alt="[公式]"> ），只要<strong>很可能</strong>是近似正确的就可以，即我们给定一个值 <img src="https://www.zhihu.com/equation?tex=%5Cdelta" alt="[公式]"> ，假设 <img src="https://www.zhihu.com/equation?tex=h" alt="[公式]"> 满足 <img src="https://www.zhihu.com/equation?tex=P%28h%E8%BF%91%E4%BC%BC%E6%AD%A3%E7%A1%AE%29%5Cge1-%5Cdelta" alt="[公式]">。</p>
+</blockquote>
+<p>  综上两点，就得到了PAC（可能近似正确，probably approximate correct）可学习的定义。简单的讲就是模型在短时间内利用少量的(多项式级别)样本能够找到一个假设 <img src="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D" alt="[公式]"> ，使其满足 <img src="https://www.zhihu.com/equation?tex=%5Cdisplaystyle+P%28E%28h+%5E%7B%27%7D%29%5Cle%5Cepsilon%29%5Cge1-%5Cdelta%5Cqquad0%5Clt%5Cepsilon%2C%5Cdelta%5Clt1" alt="[公式]"> 。</p>
+<h3 id="什么条件能满足PAC可学习？"><a href="#什么条件能满足PAC可学习？" class="headerlink" title="什么条件能满足PAC可学习？"></a>什么条件能满足PAC可学习？</h3><p>  先介绍下Hoeffding不等式：</p>
+<blockquote>
+<p>  Hoeffding不等式：给定m个取值[0,1]之间的独立随机变量 <img src="https://www.zhihu.com/equation?tex=x_1%2C+x_2%2C+%5Cldots+%2Cx_n" alt="[公式]">，对任意 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon%5Cgt0" alt="[公式]">有如下等式成立： <img src="https://www.zhihu.com/equation?tex=%5Cdisplaystyle+P%28%5Cvert%5Cfrac1m%5Csum_%7Bi%3D1%7D%5Emx_i-%5Cfrac1m%5Csum_%7Bi%3D1%7D%5EmE%28x_i%29%5Cvert%5Cge%5Cepsilon%29%5Cle%7B2e%5E%7B-2m%5Cepsilon%5E2%7D%7D" alt="[公式]"> </p>
+</blockquote>
+<p>  由泛化误差 <img src="https://www.zhihu.com/equation?tex=E%28h%29" alt="[公式]"> 与经验误差 <img src="https://www.zhihu.com/equation?tex=%5Chat%7BE%7D%28h%29" alt="[公式]"> 的定义易知 <img src="https://www.zhihu.com/equation?tex=E%28%5Chat%7BE%7D%28h%29%29%3DE%28h%29" alt="[公式]"> ，因此可推出公式（1）： <img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Bmatrix%7D%5Cforall+h+%5Cin+%5Cmathcal%7BH%7D%26P%28%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cge%5Cepsilon%29%5Cle%7B2e%5E%7B-2m%5Cepsilon%5E2%7D%7D%26%5Ctext%7B%E5%85%AC%E5%BC%8F%281%29%7D%5Cend%7Bmatrix%7D%5C%5C" alt="[公式]"> </p>
+<p>  根据不等式（1）可推出公式（2）: <img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Bmatrix%7D%5Cforall+h+%5Cin+%5Cmathcal%7BH%7D%26P%28%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cle%5Cepsilon%29%5Cge%7B1-2%5Cvert%7B%5Cmathcal%7BH%7D%7D%5Cvert%7Be%5E%7B-2m%5Cepsilon%5E2%7D%7D%7D%26%5Ctext%7B%E5%85%AC%E5%BC%8F%282%29%7D%5Cend%7Bmatrix%7D%5C%5C" alt="[公式]"> </p>
+<blockquote>
+<p>  公式（2）简要证明: <img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Balign%7D+P%28%5Cforall+%7Bh%7D+%5Cin+%5Cmathcal%7BH%7D%3A%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cle%5Cepsilon%29+%26%3D+1-P%28%5Cexists%7Bh%7D%5Cin%5Cmathcal%7BH%7D%3A%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cge%5Cepsilon%29+%5C%5C+%26%3D+1-P%28%28%5Cvert%7BE%28h_1%29-%5Chat%7BE%7D%28h_1%29%7D%5Cvert%5Cge%5Cepsilon%29%5Clor%28%5Cvert%7BE%28h_2%29-%5Chat%7BE%7D%28h_2%29%7D%5Cvert%5Cge%5Cepsilon%29%5Clor%5Ccdots%5Clor%28%5Cvert%7BE%28h_%7B%5Cvert%5Cmathcal%7BH%7D%5Cvert%7D%29-%5Chat%7BE%7D%28h_%7B%5Cvert%5Cmathcal%7BH%7D%5Cvert%7D%29%7D%5Cvert%5Cge%5Cepsilon%29%29%5C%5C+%26%5Cge+1-%5Csum_%7Bi%3D1%7D%5E%7B%5Cvert%5Cmathcal%7BH%7D%5Cvert%7DP%28%5Cvert%7BE%28h_i%29-%5Chat%7BE%7D%28h_i%29%7D%5Cvert%5Cge%5Cepsilon%29%5C%5C+%26%5Cge+%7B1-2%5Cvert%7B%5Cmathcal%7BH%7D%7D%5Cvert%7Be%5E%7B-2m%5Cepsilon%5E2%7D%7D%7D+%5Cend%7Balign%7D" alt="[公式]"> </p>
+</blockquote>
+<p>  公式（2）说明了什么？说明了对于任意 <img src="https://www.zhihu.com/equation?tex=%5Cepsilon" alt="[公式]"> ，样本数量 <img src="https://www.zhihu.com/equation?tex=m" alt="[公式]"> 越大， <img src="https://www.zhihu.com/equation?tex=%5Cvert%7BE%28h%29-%5Chat%7BE%7D%28h%29%7D%5Cvert%5Cle%5Cepsilon" alt="[公式]"> 发生的可能性也越大，此时我们可以用经验误差近似泛化误差。回到一开始我们提出的那两个问题：</p>
+<ol>
+<li>为什么在训练样本上学习得到的假设会在真实样本上有效？公式（2）很好的说明了这一问题。只要样本数量 <img src="https://www.zhihu.com/equation?tex=m" alt="[公式]"> 足够大或者假设空间的大小 <img src="https://www.zhihu.com/equation?tex=%5Cvert%5Cmathcal%7BH%7D%5Cvert" alt="[公式]"> 足够小，就能保证学到的假设 <img src="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D" alt="[公式]"> 的泛化误差 <img src="https://www.zhihu.com/equation?tex=E%28h%5E%7B%27%7D%29" alt="[公式]"> 与经验误差 <img src="https://www.zhihu.com/equation?tex=%5Chat%7BE%7D%28h%5E%7B%27%7D%29" alt="[公式]"> 足够接近。 <img src="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D" alt="[公式]"> 在训练样本上的表现与在真实样本上一致。</li>
+<li><p>为什么少量样本用CNN/RNN等复杂模型会导致过拟合？还是看公式（2）。样本数量m太小的话 <img src="https://www.zhihu.com/equation?tex=%5Cvert%7BE%28h%5E%7B%27%7D%29-%5Chat%7BE%7D%28h%5E%7B%27%7D%29%7D%5Cvert%5Cle%5Cepsilon" alt="[公式]"> 发生的可能性变小。<strong>即学到的 <img src="https://www.zhihu.com/equation?tex=h%5E%7B%27%7D" alt="[公式]"> 在训练样本上的表现与在真实样本上不一致，这是过拟合直接的表现形式</strong>。</p>
+<p>对以上两点的解释没有考虑 <img src="https://www.zhihu.com/equation?tex=%5Cvert%5Cmathcal%7BH%7D%5Cvert" alt="[公式]"> 为无穷大情况，但不影响大家理解。实际上如果 <img src="https://www.zhihu.com/equation?tex=%5Cvert%5Cmathcal%7BH%7D%5Cvert" alt="[公式]"> 为无穷大，VC维照样可以给出类似解释。  </p>
+<p>现在开始解决我们本小节提出的问题。什么条件才能满足PAC可学习?还是看公式（2），另 <img src="https://www.zhihu.com/equation?tex=%5Cdelta%3D2%5Cvert%7B%5Cmathcal%7BH%7D%7D%5Cvert%7Be%5E%7B-2m%5Cepsilon%5E2%7D%7D" alt="[公式]"> ，即:</p>
+</li>
+</ol>
+<p><img src="https://www.zhihu.com/equation?tex=%5Cbegin%7Bmatrix%7Dm%3DM%3D%5Cfrac%7B%5Cln%5E%7B%5Cfrac%7B2%5Cvert%5Cmathcal%7BH%7D%5Cvert%7D%7B%5Cdelta%7D%7D%7D%7B2%5Cepsilon%5E2%7D%26%5Ctext%7B%E5%85%AC%E5%BC%8F%283%29%7D%5Cend%7Bmatrix%7D" alt="[公式]"> </p>
+<p>本小节结论：只要样本数量 <img src="https://www.zhihu.com/equation?tex=m" alt="[公式]"> 大于公式（3）中的 <img src="https://www.zhihu.com/equation?tex=M" alt="[公式]"> ，就能保证模型在当前条件下是PAC可学习的。 </p>
+<p>相关链接：</p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/30965398">通俗易懂PAC理论</a></p>
+
+    </div>
+
+    
+    
+    
+        
+
+  <div class="followme">
+    <p>Welcome to my other publishing channels</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/simon-blog.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"># 机器学习</a>
+              <a href="/simon-blog.github.io/tags/%E5%AD%A6%E6%A0%A1/" rel="tag"># 学校</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/simon-blog.github.io/2020/08/17/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E4%B9%8BHTTPS/" rel="prev" title="计算机网络之HTTPS">
+      <i class="fa fa-chevron-left"></i> 计算机网络之HTTPS
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E5%88%99%E5%8C%96"><span class="nav-number">1.</span> <span class="nav-text">正则化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E6%AD%A3%E5%88%99%E9%A1%B9"><span class="nav-number">1.1.</span> <span class="nav-text">为什么需要正则项</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%92%8C%E6%A8%A1%E5%9E%8B%E5%A4%8D%E6%9D%82%E5%BA%A6%E4%B9%8B%E9%97%B4%E7%9A%84%E5%85%B3%E7%B3%BB"><span class="nav-number">1.2.</span> <span class="nav-text">损失和模型复杂度之间的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PAC%E7%90%86%E8%AE%BA"><span class="nav-number">2.</span> <span class="nav-text">PAC理论</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFPAC%E5%AD%A6%E4%B9%A0%E7%90%86%E8%AE%BA%EF%BC%9F"><span class="nav-number">2.1.</span> <span class="nav-text">什么是PAC学习理论？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%9D%A1%E4%BB%B6%E8%83%BD%E6%BB%A1%E8%B6%B3PAC%E5%8F%AF%E5%AD%A6%E4%B9%A0%EF%BC%9F"><span class="nav-number">2.2.</span> <span class="nav-text">什么条件能满足PAC可学习？</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Simon Sun"
+      src="/simon-blog.github.io/images/avatar.jpg">
+  <p class="site-author-name" itemprop="name">Simon Sun</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/simon-blog.github.io/archives/">
+        
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/simon-blog.github.io/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">categories</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/simon-blog.github.io/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">tags</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/JAVAN000B" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;JAVAN000B" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:smh335789877@gmail.com" title="E-Mail → mailto:smh335789877@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Simon Sun</span>
+</div>
+
+    <div>
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        本站总访问量 <span id="busuanzi_value_site_pv"></span> 次
+        <span class="post-meta-divider">|</span>
+    </span>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        有<span id="busuanzi_value_site_uv"></span>人看过我的博客啦
+    </span>
+    </div>
+
+
+  <div class="powered-by">Powered by <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a>
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/simon-blog.github.io/lib/anime.min.js"></script>
+  <script src="/simon-blog.github.io/lib/velocity/velocity.min.js"></script>
+  <script src="/simon-blog.github.io/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/simon-blog.github.io/js/utils.js"></script>
+
+<script src="/simon-blog.github.io/js/motion.js"></script>
+
+
+<script src="/simon-blog.github.io/js/schemes/pisces.js"></script>
+
+
+<script src="/simon-blog.github.io/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+  
+<script src="/simon-blog.github.io/js/local-search.js"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
